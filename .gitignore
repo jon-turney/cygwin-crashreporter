@@ -1,2 +1,9 @@
-crash_checkpoint.dat
-
+Makefile
+Makefile.in
+autom4te.cache
+config.guess
+config.sub
+configure
+depcomp
+install-sh
+missing

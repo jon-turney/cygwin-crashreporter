@@ -27,24 +27,35 @@
 #include <breakpad/client/windows/handler/exception_handler.h>
 #include <breakpad/client/windows/sender/crash_report_sender.h>
 
-#define DUMPS_DIR L"C:\\dumps\\"
+#define TITLE L"Cygwin Crash Reporter"
+#define DIRECTORY L"\\dumps"
 #define CHECKPOINT_FILE L"crash_checkpoint.dat"
 #define SERVER_URL L"http://wollstonecraft/addreport.php"
-#define TITLE L"Crash Reporter"
+
+bool verbose = FALSE;
+bool nokill = FALSE;
+wchar_t dumps_dir[MAX_PATH+1];
+std::wstring server_url = SERVER_URL;
 
 bool
 callback(const wchar_t* dump_path,
          const wchar_t* minidump_id,
-         void* context,
-         EXCEPTION_POINTERS* exinfo,
-         MDRawAssertionInfo* assertion,
+         void* context __attribute__((unused)),
+         EXCEPTION_POINTERS* exinfo __attribute__((unused)),
+         MDRawAssertionInfo* assertion __attribute__((unused)),
          bool succeeded)
 {
   std::wstring report_code;
   std::map<std::wstring,std::wstring> parameters;
 
+  parameters[L"Uploader"] = L"" PACKAGE_NAME "/" PACKAGE_VERSION;
+  parameters[L"Notes"] = L"Custom Note from Breakpad Test";
+
   wchar_t minidump_path[MAX_PATH];
   swprintf(minidump_path, MAX_PATH, L"%s\\%s.dmp", dump_path, minidump_id);
+
+ if (verbose)
+   wprintf(L"minidump file '%ls'\n", minidump_path);
 
   if (!succeeded)
     {
@@ -52,12 +63,25 @@ callback(const wchar_t* dump_path,
       return FALSE;
     }
 
-  google_breakpad::CrashReportSender *pSender = new google_breakpad::CrashReportSender(CHECKPOINT_FILE);
-  google_breakpad::ReportResult result = pSender->SendCrashReport(SERVER_URL, parameters, minidump_path, &report_code);
+  wchar_t checkpoint_file[MAX_PATH+1];
+  wcscpy(checkpoint_file, dumps_dir);
+  wcscat(checkpoint_file, L"\\" CHECKPOINT_FILE);
+
+ if (verbose)
+   {
+     wprintf(L"checkpoint file '%ls'\n", checkpoint_file);
+     wprintf(L"server URL is '%ls'\n", server_url.c_str());
+   }
+
+  google_breakpad::CrashReportSender *pSender = new google_breakpad::CrashReportSender(checkpoint_file);
+  pSender->set_max_reports_per_day(10);
+  google_breakpad::ReportResult result = pSender->SendCrashReport(server_url, parameters, minidump_path, &report_code);
+
+  if (verbose)
+    wprintf(L"minidump upload result %d, report code '%s'\n", result, report_code.c_str());
 
   if (result == google_breakpad::RESULT_SUCCEEDED)
     {
-      report_code.c_str();
       MessageBoxW(NULL, L"Sent! Thank you!", TITLE, MB_OK);
     }
   else
@@ -89,16 +113,88 @@ callback(const wchar_t* dump_path,
   return (result == google_breakpad::RESULT_SUCCEEDED);
 }
 
-int
-main (int argc, char **argv)
+static void
+usage(FILE *stream, int status)
 {
-  char *filename;
-  DWORD pid;
+  wchar_t buffer[MAX_PATH];
+  GetModuleFileNameW(NULL, buffer, MAX_PATH);
+  buffer[MAX_PATH -1] = 0;
 
-  if (argc > 2)
+  fwprintf(stream, L"\
+Usage: %ls [OPTION] IGNORED_FILENAME WIN32PID\n\
+\n\
+Write and upload minidump from WIN32PID\n\
+\n\
+ -d, --verbose  be verbose\n\
+ -h, --help     output help information and exit\n\
+ -n, --nokill   don't terminate the dumped process\n\
+ -q, --quiet    be quiet while dumping (default)\n\
+ -s, --server   set upload server URL\n\
+ -V, --version  output version information and exit\n\
+\n", buffer);
+  exit (status);
+}
+
+static void
+print_version(void)
+{
+  printf(PACKAGE_NAME " " PACKAGE_VERSION "\n"
+         "Minidump crash reporter for Cygwin\n"
+         "This is free software; see the source for copying conditions.  There is NO\n"
+         "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n");
+}
+
+extern "C" int
+wmain(int argc, wchar_t **argv)
+{
+  DWORD pid;
+  int i;
+
+  for (i = 1; i < argc; i++)
     {
-      filename = argv[1]; // ignored
-      pid = strtoul(argv[2], NULL, 10);
+      if (argv[i][0] != L'-')
+        break;
+
+      switch (argv[i][1])
+        {
+        case L'n':
+          nokill = TRUE;
+          break;
+        case L'd':
+          verbose = TRUE;
+          break;
+        case L'q':
+          verbose = FALSE;
+          break;
+        case L's':
+          if (argc > i)
+            {
+              i++;
+              server_url = argv[i];
+            }
+          else
+            usage(stderr, 1);
+          break;
+        case L'h':
+          usage(stdout, 0);
+        case L'V':
+          print_version();
+          exit (0);
+        default:
+          usage(stderr, 1);
+          return -1;
+        }
+    }
+
+  if ((i + 2) == argc)
+    {
+      // filename in argv[i] is ignored
+      pid = wcstoul(argv[i+1], NULL, 10);
+    }
+  else
+    {
+      usage (stderr, 1);
+      return -1;
     }
 
   HANDLE process  = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_TERMINATE,
@@ -107,31 +203,39 @@ main (int argc, char **argv)
   if (process == INVALID_HANDLE_VALUE)
     {
       MessageBoxW(NULL, L"Error opening process", TITLE, MB_OK);
-      return 1;
+      return -1;
     }
 
-  if (_wmkdir(DUMPS_DIR) && (errno != EEXIST)) {
+  if (!GetTempPathW(MAX_PATH, dumps_dir))
+    wcscpy(dumps_dir, L"C:");
+
+  if (dumps_dir[wcslen(dumps_dir)-1] == L'\\')
+    dumps_dir[wcslen(dumps_dir)-1] = 0;
+
+  if (wcslen(dumps_dir) + wcslen(DIRECTORY) < MAX_PATH)
+    wcscat(dumps_dir, DIRECTORY);
+
+  if (_wmkdir(dumps_dir) && (errno != EEXIST)) {
     MessageBoxW(NULL, L"Unable to create dump directory", TITLE, MB_OK);
-    return 1;
+    return -1;
   }
 
   bool success = google_breakpad::ExceptionHandler::WriteMinidumpForChild(
      process, // process handle
      0, // child_blamed_thread
-     DUMPS_DIR, // dump path
+     dumps_dir, // dump path
      callback, // Uploader callback
      NULL // callback context
      );
 
-#if 0
   /* Unless nokill is given, behave like dumper and terminate the dumped process */
   if (!nokill)
     {
       TerminateProcess(process, 128 + 9);
       WaitForSingleObject(process, INFINITE);
     }
-#endif
+
   CloseHandle(process);
 
-  return success ? 0 : 1;
+  return success ? 0 : -1;
 }
