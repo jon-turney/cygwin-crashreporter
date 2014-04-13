@@ -40,15 +40,19 @@ main_display(void)
   // MainWindow.AddPage (&Progress);
   // MainWindow.AddPage (&Done);
 
-  // Create the PropSheet main window
+  // Create and run the PropSheet main window
   MainWindow.Create ();
-
 }
 
 int WINAPI
-wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
+wWinMain(HINSTANCE hInstance,
+         HINSTANCE hPrevInstance __attribute__((unused)),
+         PWSTR pCmdLine __attribute__((unused)),
+         int nCmdShow __attribute__((unused)))
 {
   hinstance = hInstance;
 
   main_display();
+
+  return 0;
 }

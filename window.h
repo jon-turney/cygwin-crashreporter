@@ -27,8 +27,6 @@
 #include <windows.h>
 #include <commctrl.h>
 
-class RECTWrapper;
-
 class Window
 {
   static ATOM WindowClassAtom;
@@ -125,14 +123,18 @@ public:
 
   void PostMessageNow (UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0);
 
-  virtual bool OnMessageApp (UINT uMsg, WPARAM wParam, LPARAM lParam)
+  virtual bool OnMessageApp (UINT uMsg  __attribute__((unused)),
+                             WPARAM wParam __attribute__((unused)),
+                             LPARAM lParam __attribute__((unused)))
   {
     // Not processed by default.  Override in derived classes to
     // do something with app messages if you need to.
     return false;
   };
 
-  virtual bool OnMessageCmd (int id, HWND hwndctl, UINT code)
+  virtual bool OnMessageCmd (int id __attribute__((unused)),
+                             HWND hwndctl __attribute__((unused)),
+                             UINT code __attribute__((unused)))
   {
     // Not processed by default.  Override in derived classes to
     // do something with command messages if you need to.
@@ -147,7 +149,6 @@ public:
 
   // Reposition the window
   bool MoveWindow(long x, long y, long w, long h, bool Repaint = true);
-  bool MoveWindow(const RECTWrapper &r, bool Repaint = true);
 
   // Set the title of the window.
   void SetWindowText (const std::string& s);

@@ -21,25 +21,8 @@
 #include "propsheet.h"
 #include "proppage.h"
 #include "resource.h"
-//#include "RECTWrapper.h"
-//#include "choose.h"
 
-//#include <shlwapi.h>
-// ...but since there is no shlwapi.h in mingw yet:
-typedef struct _DllVersionInfo
-{
-  DWORD cbSize;
-  DWORD dwMajorVersion;
-  DWORD dwMinorVersion;
-  DWORD dwBuildNumber;
-  DWORD dwPlatformID;
-}
-DLLVERSIONINFO;
-typedef HRESULT CALLBACK (*DLLGETVERSIONPROC) (DLLVERSIONINFO * pdvi);
-
-#ifndef PROPSHEETHEADER_V1_SIZE
-#define PROPSHEETHEADER_V1_SIZE 40
-#endif
+#include <shlwapi.h>
 
 // Sort of a "hidden" Windows structure.  Used in the PropSheetCallback.
 #include <pshpack1.h>
@@ -84,21 +67,21 @@ PropSheet::CreatePages ()
   for (i = 0; i < PropertyPages.size(); i++)
     {
       retarray[i] =
-	CreatePropertySheetPage (PropertyPages[i]->GetPROPSHEETPAGEPtr ());
+        CreatePropertySheetPage (PropertyPages[i]->GetPROPSHEETPAGEPtr ());
 
       // Set position info
       if (i == 0)
-	{
-	  PropertyPages[i]->YouAreFirst ();
-	}
+        {
+          PropertyPages[i]->YouAreFirst ();
+        }
       else if (i == PropertyPages.size() - 1)
-	{
-	  PropertyPages[i]->YouAreLast ();
-	}
+        {
+          PropertyPages[i]->YouAreLast ();
+        }
       else
-	{
-	  PropertyPages[i]->YouAreMiddle ();
-	}
+        {
+          PropertyPages[i]->YouAreMiddle ();
+        }
     }
 
   return retarray;
@@ -108,50 +91,21 @@ PropSheet::CreatePages ()
 struct PropSheetData
 {
   WNDPROC oldWndProc;
-  bool clientRectValid;
-  //  RECTWrapper lastClientRect;
   bool gotPage;
-  //  RECTWrapper pageRect;
-  bool hasMinRect;
-  // RECTWrapper minRect;
 
   PropSheetData ()
   {
     oldWndProc = 0;
-    clientRectValid = false;
     gotPage = false;
-    hasMinRect = false;
   }
 
-// @@@ Ugly. Really only works because only one PS is used now.
+// @@@ Ugly. Really only works because only one PropSheet is used now.
   static PropSheetData& Instance()
   {
     static PropSheetData TheInstance;
     return TheInstance;
   }
 };
-
-static bool IsDialog (HWND hwnd)
-{
-  char className[7];
-  GetClassName (hwnd, className, sizeof (className));
-
-  return (strcmp (className, "#32770") == 0);
-}
-
-BOOL CALLBACK EnumPages (HWND hwnd, LPARAM lParam)
-{
-  // Is it really a dialog?
-  if (IsDialog (hwnd))
-    {
-      //      PropSheetData& psd = PropSheetData::Instance();
-      //      SetWindowPos (hwnd, 0, psd.pageRect.left, psd.pageRect.top,
-      //                    psd.pageRect.width (), psd.pageRect.height (),
-      //                    SWP_NOACTIVATE | SWP_NOZORDER);
-    }
-
-  return TRUE;
-}
 
 static LRESULT CALLBACK PropSheetWndProc (HWND hwnd, UINT uMsg,
   WPARAM wParam, LPARAM lParam)
@@ -167,9 +121,8 @@ static LRESULT CALLBACK PropSheetWndProc (HWND hwnd, UINT uMsg,
       if (wParam != 2)
         break;
     areyousure:
-      if (MessageBox(hwnd,
-                     "Are you sure you want to exit setup? Any current download or installation will be aborted.",
-                     "Exit Cygwin Setup?", MB_YESNO) == IDNO)
+      if (MessageBox(hwnd, "Are you sure you want to cancel?",
+                     "Cygwin crash reporter", MB_YESNO) == IDNO)
         return 0;
       break;
     }
@@ -184,27 +137,15 @@ PropSheetProc (HWND hwndDlg, UINT uMsg, LPARAM lParam)
   switch (uMsg)
     {
     case PSCB_PRECREATE:
-      {
-	LONG additionalStyle =
-	  (WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME);
-	// Add a minimize box to the sheet/wizard.
-	if (((LPDLGTEMPLATEEX) lParam)->signature == 0xFFFF)
-	  {
-	    ((LPDLGTEMPLATEEX) lParam)->style |= additionalStyle;
-	  }
-	else
-	  {
-	    ((LPDLGTEMPLATE) lParam)->style |= additionalStyle;
-	  }
-      }
       return TRUE;
+
     case PSCB_INITIALIZED:
       {
         /*
           PropSheet() with PSH_USEICONID only sets the small icon,
           so we must set the big icon ourselves
         */
-        SendMessage(hwndDlg, WM_SETICON, ICON_BIG, (LPARAM)LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_CYGWIN)));
+        SendMessage(hwndDlg, WM_SETICON, ICON_BIG, (LPARAM)LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_HIPPO)));
         /*
           Hook into the window proc.
           We need to catch some messages for resizing.
@@ -219,59 +160,15 @@ PropSheetProc (HWND hwndDlg, UINT uMsg, LPARAM lParam)
   return TRUE;
 }
 
-static DWORD
-GetPROPSHEETHEADERSize ()
-{
-  // For compatibility with all versions of comctl32.dll, we have to do this.
-
-  DLLVERSIONINFO vi;
-  HMODULE mod;
-  DLLGETVERSIONPROC DllGetVersion;
-  DWORD retval = 0;
-
-
-  // This 'isn't safe' in a DLL, according to MSDN
-  mod = LoadLibrary ("comctl32.dll");
-
-  DllGetVersion = (DLLGETVERSIONPROC) GetProcAddress (mod, "DllGetVersion");
-  if (DllGetVersion == NULL)
-    {
-      // Something's wildly broken, punt.
-      retval = PROPSHEETHEADER_V1_SIZE;
-    }
-  else
-    {
-      vi.cbSize = sizeof (DLLVERSIONINFO);
-      DllGetVersion (&vi);
-
-      if ((vi.dwMajorVersion < 4) ||
-	  ((vi.dwMajorVersion == 4) && (vi.dwMinorVersion < 71)))
-	{
-	  // Recent.
-	  retval = sizeof (PROPSHEETHEADER);
-	}
-      else
-	{
-	  // Old (== Win95/NT4 w/o IE 4 or better)
-	  retval = PROPSHEETHEADER_V1_SIZE;
-	}
-    }
-
-  FreeLibrary (mod);
-
-  return retval;
-}
-
 bool
-PropSheet::Create (const Window * Parent, DWORD Style)
+PropSheet::Create (const Window * Parent, DWORD Style __attribute__((unused)))
 {
   PROPSHEETHEADER p;
 
   PageHandles = CreatePages ();
 
-  p.dwSize = GetPROPSHEETHEADERSize ();
-  p.dwFlags = PSH_NOAPPLYNOW | PSH_WIZARD | PSH_USECALLBACK
-    /*| PSH_MODELESS */ | PSH_USEICONID;
+  p.dwSize = sizeof (PROPSHEETHEADER);
+  p.dwFlags = PSH_NOAPPLYNOW | PSH_WIZARD | PSH_USECALLBACK | PSH_USEICONID;
   if (Parent != NULL)
     {
       p.hwndParent = Parent->GetHWND ();
@@ -282,30 +179,15 @@ PropSheet::Create (const Window * Parent, DWORD Style)
     }
   p.hInstance = GetInstance ();
   p.nPages = PropertyPages.size();
-  p.pszIcon = MAKEINTRESOURCE(IDI_CYGWIN);
+  p.pszIcon = MAKEINTRESOURCE(IDI_HIPPO);
   p.nStartPage = 0;
   p.phpage = PageHandles;
   p.pfnCallback = PropSheetProc;
 
-
-  // The winmain event loop actually resides in here.
+  // Create and run the modal property sheet
   PropertySheet (&p);
 
-  // Do a modeless property sheet...
-  //SetHWND((HWND)PropertySheet(&p));
-  /*Show(SW_SHOWNORMAL);
-
-     // ...but pretend it's modal
-     MessageLoop();
-     MessageBox(NULL, "DONE", NULL, MB_OK);
-
-     // FIXME: Enable the parent before destroying this window to prevent another window
-     // from becoming the foreground window
-     // ala: EnableWindow(<parent_hwnd>, TRUE);
-     //DestroyWindow(WindowHandle);
-   */
   SetHWND (NULL);
-
 
   return true;
 }
