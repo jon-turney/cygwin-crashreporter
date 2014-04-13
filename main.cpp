@@ -59,7 +59,7 @@ callback(const wchar_t* dump_path,
 
   if (!succeeded)
     {
-      MessageBoxW(NULL, L"Minidump generation failed", TITLE, MB_OK);
+      MessageBoxW(NULL, L"Minidump generation failed", TITLE, MB_OK | MB_ICONEXCLAMATION);
       return FALSE;
     }
 
@@ -82,7 +82,7 @@ callback(const wchar_t* dump_path,
 
   if (result == google_breakpad::RESULT_SUCCEEDED)
     {
-      MessageBoxW(NULL, L"Sent! Thank you!", TITLE, MB_OK);
+      MessageBoxW(NULL, L"Crash report sent! Thank you!", TITLE, MB_OK | MB_ICONASTERISK);
     }
   else
     {
@@ -103,7 +103,7 @@ callback(const wchar_t* dump_path,
           ;
         }
 
-      MessageBoxW(NULL, reason, TITLE, MB_OK);
+      MessageBoxW(NULL, reason, TITLE, MB_OK | MB_ICONEXCLAMATION);
     }
 
   delete pSender;
@@ -200,9 +200,9 @@ wmain(int argc, wchar_t **argv)
   HANDLE process  = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_TERMINATE,
                                 FALSE,
                                 pid);
-  if (process == INVALID_HANDLE_VALUE)
+  if (process == NULL)
     {
-      MessageBoxW(NULL, L"Error opening process", TITLE, MB_OK);
+      MessageBoxW(NULL, L"Error opening process", TITLE, MB_OK | MB_ICONEXCLAMATION);
       return -1;
     }
 
@@ -216,7 +216,7 @@ wmain(int argc, wchar_t **argv)
     wcscat(dumps_dir, DIRECTORY);
 
   if (_wmkdir(dumps_dir) && (errno != EEXIST)) {
-    MessageBoxW(NULL, L"Unable to create dump directory", TITLE, MB_OK);
+    MessageBoxW(NULL, L"Unable to create dump directory", TITLE, MB_OK | MB_ICONEXCLAMATION);
     return -1;
   }
 
