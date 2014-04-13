@@ -27,7 +27,6 @@
 #include <breakpad/client/windows/handler/exception_handler.h>
 #include <breakpad/client/windows/sender/crash_report_sender.h>
 
-#define TITLE L"Cygwin Crash Reporter"
 #define DIRECTORY L"\\dumps"
 #define CHECKPOINT_FILE L"crash_checkpoint.dat"
 #define SERVER_URL L"http://wollstonecraft/addreport.php"
@@ -55,11 +54,11 @@ callback(const wchar_t* dump_path,
   swprintf(minidump_path, MAX_PATH, L"%s\\%s.dmp", dump_path, minidump_id);
 
  if (verbose)
-   wprintf(L"minidump file '%ls'\n", minidump_path);
+   wprintf(L"minidump file is '%ls'\n", minidump_path);
 
   if (!succeeded)
     {
-      MessageBoxW(NULL, L"Minidump generation failed", TITLE, MB_OK | MB_ICONEXCLAMATION);
+      wprintf(L"Minidump generation failed\n");
       return FALSE;
     }
 
@@ -69,7 +68,7 @@ callback(const wchar_t* dump_path,
 
  if (verbose)
    {
-     wprintf(L"checkpoint file '%ls'\n", checkpoint_file);
+     wprintf(L"checkpoint file is '%ls'\n", checkpoint_file);
      wprintf(L"server URL is '%ls'\n", server_url.c_str());
    }
 
@@ -78,32 +77,32 @@ callback(const wchar_t* dump_path,
   google_breakpad::ReportResult result = pSender->SendCrashReport(server_url, parameters, minidump_path, &report_code);
 
   if (verbose)
-    wprintf(L"minidump upload result %d, report code '%s'\n", result, report_code.c_str());
+    wprintf(L"Crash report upload result %d, report code '%s'\n", result, report_code.c_str());
 
   if (result == google_breakpad::RESULT_SUCCEEDED)
     {
-      MessageBoxW(NULL, L"Crash report sent! Thank you!", TITLE, MB_OK | MB_ICONASTERISK);
+      wprintf(L"Crash report sent! Thank you!\n");
     }
   else
     {
-      const wchar_t *reason = L"Unknown error";
+      const wchar_t *reason = L"unknown error";
 
       switch (result)
         {
         case google_breakpad::RESULT_FAILED:
-          reason =  L"Upload failed";
+          reason =  L"failed";
           break;
         case google_breakpad::RESULT_REJECTED:
-          reason = L"Upload rejected";
+          reason = L"rejected";
           break;
         case google_breakpad::RESULT_THROTTLED:
-          reason = L"Upload throttled";
+          reason = L"throttled";
           break;
         default:
           ;
         }
 
-      MessageBoxW(NULL, reason, TITLE, MB_OK | MB_ICONEXCLAMATION);
+      wprintf(L"Crash report upload failed: %ls\n", reason);
     }
 
   delete pSender;
@@ -197,12 +196,12 @@ wmain(int argc, wchar_t **argv)
       return -1;
     }
 
-  HANDLE process  = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_TERMINATE,
+  HANDLE process = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_TERMINATE,
                                 FALSE,
                                 pid);
   if (process == NULL)
     {
-      MessageBoxW(NULL, L"Error opening process", TITLE, MB_OK | MB_ICONEXCLAMATION);
+      wprintf(L"Error opening process %d\n", pid);
       return -1;
     }
 
@@ -216,7 +215,7 @@ wmain(int argc, wchar_t **argv)
     wcscat(dumps_dir, DIRECTORY);
 
   if (_wmkdir(dumps_dir) && (errno != EEXIST)) {
-    MessageBoxW(NULL, L"Unable to create dump directory", TITLE, MB_OK | MB_ICONEXCLAMATION);
+    wprintf(L"Unable to create temporary directory '%s' for writing minidump\n", dumps_dir);
     return -1;
   }
 
