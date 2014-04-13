@@ -1,6 +1,7 @@
 AC_INIT(cygwin_crash_reporter, 0.1)
 AM_INIT_AUTOMAKE(foreign no-dist-gzip dist-xz -Wall)
 AM_MAINTAINER_MODE([enable])
+AM_SILENT_RULES([yes])
 
 AC_CANONICAL_HOST
 AC_PROG_CXX
