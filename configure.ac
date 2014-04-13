@@ -4,6 +4,7 @@ AM_MAINTAINER_MODE([enable])
 
 AC_CANONICAL_HOST
 AC_PROG_CXX
+AC_CHECK_TOOL(WINDRES, windres)
 
 case $host in
   *-*-cygwin* )

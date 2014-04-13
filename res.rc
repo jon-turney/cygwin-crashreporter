@@ -1,0 +1,115 @@
+//
+//
+//
+
+#include "resource.h"
+#include "windows.h"
+
+#define SETUP_STANDARD_DIALOG_W 339
+#define SETUP_STANDARD_DIALOG_H 179
+#define SETUP_STANDARD_DIALOG_DIMS SETUP_STANDARD_DIALOG_W, SETUP_STANDARD_DIALOG_H
+#define SETUP_HEADICON_X (SETUP_STANDARD_DIALOG_W - 27)
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialogs
+//
+
+IDD_SPLASH DIALOG  0, 0, SETUP_STANDARD_DIALOG_DIMS
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Cygwin crash reporter"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Cygwin crash reporter",
+                    IDC_STATIC, 115, 1, 195, 24
+    LTEXT           "This setup program is used for the initial installation "
+                    "of the Cygwin environment as well as all subsequent "
+                    "updates.  Make sure to remember where you saved it.\r\n\r\n"
+                    "The pages that follow will guide you through the "
+                    "installation.  Please note that Cygwin consists of a "
+                    "large number of packages spanning a wide variety of "
+                    "purposes.  We only install a base set of packages by "
+                    "default.  You can always run this program at any time in "
+                    "the future to add, remove, or upgrade packages as "
+                    "necessary.",IDC_STATIC, 115, 25, 195, 90
+    ICON            IDI_CYGWIN, IDC_STATIC, 4, 6, 0, 0, SS_ICON | SS_REALSIZEIMAGE
+    LTEXT           "Version (unknown)",IDC_STATIC, 115, 127, 195, 10
+    LTEXT           "Copyright 2000-2013",IDC_STATIC, 115, 140, 195, 8
+    LTEXT           "http://www.cygwin.com/",IDC_STATIC, 115, 152, 90, 8
+END
+
+IDD_NOTES DIALOG  0, 0, SETUP_STANDARD_DIALOG_DIMS
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Cygwin crash reporter - Add description"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "",IDC_STATIC, "Static", SS_BLACKFRAME | SS_SUNKEN,
+                    0, 28, SETUP_STANDARD_DIALOG_W, 1
+    ICON            IDI_CYGWIN, IDC_STATIC, SETUP_HEADICON_X, 0, 21, 20
+    LTEXT           "Postinstall script errors",IDC_STATIC,
+                    7, 0, 258, 8, NOT WS_GROUP
+    LTEXT           "You can describe what you were doing when the crash occured"
+                    ""
+                    "",
+                    IDC_STATIC, 21, 9, 239, 16, NOT WS_GROUP
+    EDITTEXT        IDC_NOTES_EDIT,7, 41, 303, 112, WS_VSCROLL | WS_HSCROLL |
+                    ES_LEFT | ES_MULTILINE | ES_AUTOHSCROLL | ES_AUTOVSCROLL
+
+END
+
+IDD_PROGRESS DIALOG  0, 0, SETUP_STANDARD_DIALOG_DIMS
+STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Cygwin crash reporter - Collecting crash report and uploading"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    ICON            IDI_CYGWIN, IDC_STATIC, SETUP_HEADICON_X, 0, 21, 20
+    CONTROL         "",IDC_STATIC, "Static", SS_BLACKFRAME | SS_SUNKEN, 0, 28, SETUP_STANDARD_DIALOG_W, 1
+    LTEXT           "This page displays the progress of the download or installation.",
+                    IDC_STATIC, 21, 9, 239, 16, NOT WS_GROUP
+    LTEXT           "Progress", IDC_STATIC, 7, 0, 258, 8, NOT WS_GROUP
+END
+
+IDD_DONE DIALOG  0, 0, SETUP_STANDARD_DIALOG_DIMS
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Cygwin crash reporter - Thank you"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    ICON            IDI_CYGWIN, IDC_STATIC, SETUP_HEADICON_X, 0, 21, 20
+    CONTROL         "", IDC_STATIC, "Static", SS_BLACKFRAME | SS_SUNKEN, 0, 28, SETUP_STANDARD_DIALOG_W, 1
+    CONTROL         "", IDC_STATIC, "Static", SS_BLACKFRAME | SS_SUNKEN,
+                    0,135,SETUP_STANDARD_DIALOG_W,1
+    LTEXT           "Report status", IDC_STATIC, 7, 140, 258, 8, NOT WS_GROUP
+    LTEXT           "Crash reporting completed successfully.", IDC_STATIC,
+                    21, 149, 279, 36, NOT WS_GROUP
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Manifest
+//
+
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "cygwin_crash_reporter.exe.manifest"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+IDI_HIPPO               ICON        "hippo.ico"
+IDI_CYGWIN              ICON        "cygwin.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+END

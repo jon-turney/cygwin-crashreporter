@@ -1,0 +1,20 @@
+// Strings
+
+// Dialogs
+
+#define IDD_SPLASH                        200
+#define IDD_NOTES                         201
+#define IDD_PROGRESS                      202
+#define IDD_DONE                          203
+
+// Bitmaps
+
+// Icons
+
+#define IDI_HIPPO                         400
+#define IDI_CYGWIN                        401
+
+// controls
+
+#define IDC_STATIC                        -1
+#define IDC_NOTES_EDIT                    500
