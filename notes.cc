@@ -1,30 +1,36 @@
-/*
- * Copyright (c) 2001, 2002, 2003 Gary R. Van Sickle.
- *
- *     This program is free software; you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation; either version 2 of the License, or
- *     (at your option) any later version.
- *
- *     A copy of the GNU General Public License can be found at
- *     http://www.gnu.org/
- *
- * Written by Gary R. Van Sickle <g.r.vansickle@worldnet.att.net>
- *
- */
+/* notes.cc
 
-/* This is the implementation of the NotesPage class. */
+   Copyright 2014 Jon TURNEY
+
+   This file is part of cygwin_crash_reporter
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License (file COPYING.dumper) for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
+*/
+
+// This is the implementation of the NotesPage class.
 
 #include "resource.h"
 #include "notes.h"
 #include "crash_reporter.h"
 
-NotesPage::NotesPage ()
+NotesPage::NotesPage()
 {
 }
 
 bool
-NotesPage::Create ()
+NotesPage::Create()
 {
   return PropertyPage::Create (IDD_NOTES);
 }
