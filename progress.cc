@@ -130,18 +130,20 @@ ProgressPage::OnActivate(void)
   // disable next and back buttons
   GetOwner()->SetButtons(0);
 
-  //
+  // start the progress animation
   hippo = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_HIPPO));
-
   SetTimer(GetHWND(), ID_TIMER, 1000/ANIMATION_FREQUENCY, NULL);
 
-  //
-  //KillTimer(ID_TIMER);
-  //DestroyIcon(hippo);
-  //
-
+  // do crash reporting in a separate thread so it doesn't block UI
   DWORD threadID;
   CreateThread (NULL, 0, crash_report_thread, GetHWND(), 0, &threadID);
+}
+
+void
+ProgressPage::OnDeactivate()
+{
+  KillTimer(GetHWND(), ID_TIMER);
+  DestroyIcon(hippo);
 }
 
 bool

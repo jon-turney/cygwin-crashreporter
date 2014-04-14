@@ -35,6 +35,7 @@ public:
 
   bool Create();
   virtual void OnActivate(void);
+  virtual void OnDeactivate(void);
   virtual bool OnMessageApp(UINT message, WPARAM wParam, LPARAM lParam);
 };
 
