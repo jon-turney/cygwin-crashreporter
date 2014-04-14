@@ -13,12 +13,12 @@
  *
  */
 
-#ifndef SETUP_WINDOW_H
-#define SETUP_WINDOW_H
+#ifndef WINDOW_H
+#define WINDOW_H
 
-// This is the header for the Window class.  It serves both as a window class
-// in its own right and as a base class for other window-like classes (e.g. PropertyPage,
-// PropSheet).
+// This is the header for the Window class.  It serves both as a window class in
+// its own right and as a base class for other window-like classes
+// (e.g. PropertyPage, PropSheet).
 
 #include <vector>
 #include <map>
@@ -144,14 +144,8 @@ public:
   RECT GetWindowRect() const;
   RECT GetClientRect() const;
 
-  // Center the window on the parent, or on screen if no parent.
-  void CenterWindow ();
-
   // Reposition the window
   bool MoveWindow(long x, long y, long w, long h, bool Repaint = true);
-
-  // Set the title of the window.
-  //  void SetWindowText (const std::wstring& s);
 
   RECT ScreenToClient(const RECT &r) const;
 
@@ -162,4 +156,4 @@ public:
   void ClearBusy (void);
 };
 
-#endif /* SETUP_WINDOW_H */
+#endif /* WINDOW_H */

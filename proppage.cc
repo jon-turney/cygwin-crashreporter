@@ -131,7 +131,7 @@ PropertyPage::DialogProc (UINT message, WPARAM wParam, LPARAM lParam)
                 // Tell our parent PropSheet what its own HWND is.
                 GetOwner ()->SetHWNDFromPage (((NMHDR FAR *) lParam)->
                                               hwndFrom);
-                GetOwner ()->CenterWindow ();
+                //                GetOwner ()->CenterWindow ();
                 DoOnceForSheet = false;
               }
 

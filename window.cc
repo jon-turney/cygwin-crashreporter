@@ -18,7 +18,6 @@
 // (e.g. PropertyPage, PropSheet).
 
 #include "window.h"
-//#include "RECTWrapper.h"
 #include "resource.h"
 
 #include <windows.h>
@@ -214,58 +213,6 @@ Window::MoveWindow(long x, long y, long w, long h, bool Repaint)
   return ::MoveWindow (WindowHandle, x, y, w, h, Repaint);
 }
 
-// bool
-// Window::MoveWindow(const RECTWrapper &r, bool Repaint)
-// {
-//   return ::MoveWindow (WindowHandle, r.left, r.top, r.width(), r.height(), Repaint);
-// }
-
-void
-Window::CenterWindow ()
-{
-  RECT WindowRect, ParentRect;
-  int WindowWidth, WindowHeight;
-  POINT p;
-
-  // Get the window rectangle
-  WindowRect = GetWindowRect ();
-
-  if (GetParent () == NULL)
-    {
-      // Center on desktop window
-      ::GetWindowRect (GetDesktopWindow (), &ParentRect);
-    }
-  else
-    {
-      // Center on client area of parent
-      ::GetClientRect (GetParent ()->GetHWND (), &ParentRect);
-    }
-
-  WindowWidth = WindowRect.right - WindowRect.left;
-  WindowHeight = WindowRect.bottom - WindowRect.top;
-
-  // Find center of area we're centering on
-  p.x = (ParentRect.right - ParentRect.left) / 2;
-  p.y = (ParentRect.bottom - ParentRect.top) / 2;
-
-  // Convert that to screen coords
-  if (GetParent () == NULL)
-    {
-      ClientToScreen (GetDesktopWindow (), &p);
-    }
-  else
-    {
-      ClientToScreen (GetParent ()->GetHWND (), &p);
-    }
-
-  // Calculate new top left corner for window
-  p.x -= WindowWidth / 2;
-  p.y -= WindowHeight / 2;
-
-  // And finally move the window
-  MoveWindow (p.x, p.y, WindowWidth, WindowHeight);
-}
-
 LRESULT
 Window::WindowProc (UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -343,12 +290,6 @@ Window::SetDlgItemFont (int id, const TCHAR * fontname, int Pointsize,
 
   return true;
 }
-
-// void
-// Window::SetWindowText (const std::wstring& s)
-// {
-//   ::SetWindowTextW (WindowHandle, s.c_str ());
-// }
 
 RECT
 Window::ScreenToClient(const RECT &r) const
