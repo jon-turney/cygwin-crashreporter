@@ -40,6 +40,7 @@ CygwinCrashReporter::CygwinCrashReporter()
   server_url = SERVER_URL;
 
   dump_succeeded = FALSE;
+  upload_succeeded = FALSE;
   upload_result = google_breakpad::RESULT_FAILED;
 }
 
@@ -161,12 +162,11 @@ CygwinCrashReporter::crash_reporter_callback(const wchar_t* dump_path,
  if (verbose)
    wprintf(L"minidump file is '%ls'\n", minidump_path);
 
+  dump_succeeded = succeeded;
   if (!succeeded)
     {
-      wprintf(L"Minidump generation failed\n");
       return FALSE;
     }
-  dump_succeeded = succeeded;
 
   wchar_t checkpoint_file[MAX_PATH+1];
   wcscpy(checkpoint_file, dumps_dir);
@@ -183,20 +183,17 @@ CygwinCrashReporter::crash_reporter_callback(const wchar_t* dump_path,
   parameters[L"Uploader"] = L"" PACKAGE_NAME "/" PACKAGE_VERSION;
   parameters[L"Notes"] = L"Custom Note from Breakpad Test";
 
-  std::wstring report_code;
   google_breakpad::CrashReportSender *pSender = new google_breakpad::CrashReportSender(checkpoint_file);
   pSender->set_max_reports_per_day(10);
-  google_breakpad::ReportResult result = pSender->SendCrashReport(server_url, parameters, minidump_path, &report_code);
+  google_breakpad::ReportResult result = pSender->SendCrashReport(server_url, parameters, minidump_path, &upload_report_code);
 
   if (verbose)
-    wprintf(L"Crash report upload result %d, report code '%s'\n", result, report_code.c_str());
-  upload_report_code = report_code;
+    wprintf(L"Crash report upload result %d, report code '%s'\n", result, upload_report_code.c_str());
 
   if (result == google_breakpad::RESULT_SUCCEEDED)
     {
       upload_succeeded = true;
       upload_result = L"success";
-      wprintf(L"Crash report sent! Thank you!\n");
     }
   else
     {
@@ -217,8 +214,6 @@ CygwinCrashReporter::crash_reporter_callback(const wchar_t* dump_path,
         default:
           ;
         }
-
-      wprintf(L"Crash report upload failed: %ls\n", upload_result.c_str());
     }
 
   delete pSender;
@@ -270,5 +265,5 @@ CygwinCrashReporter::do_dump(void)
 
   fflush(stdout);
 
-  return success ? 0 : -1;
+  return success;
 }
