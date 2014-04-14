@@ -65,7 +65,7 @@ DonePage::OnActivate(void)
           if (crashreporter->upload_report_code.empty())
             SetControlText(IDC_UPLOAD_REPORT_CODE, L"");
           else
-            SetControlText(IDC_UPLOAD_REPORT_CODE, L"Report code '" + crashreporter->upload_report_code + L"'");
+            SetControlText(IDC_UPLOAD_REPORT_CODE, L"Crash report ID " + crashreporter->upload_report_code);
         }
     }
 }

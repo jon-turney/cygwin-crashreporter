@@ -188,7 +188,7 @@ CygwinCrashReporter::crash_reporter_callback(const wchar_t* dump_path,
   google_breakpad::ReportResult result = pSender->SendCrashReport(server_url, parameters, minidump_path, &upload_report_code);
 
   if (verbose)
-    wprintf(L"Crash report upload result %d, report code '%s'\n", result, upload_report_code.c_str());
+    wprintf(L"Crash report upload result %d, report code '%ls'\n", result, upload_report_code.c_str());
 
   if (result == google_breakpad::RESULT_SUCCEEDED)
     {

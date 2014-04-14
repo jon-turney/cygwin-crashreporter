@@ -45,6 +45,11 @@ wmain(int argc, wchar_t **argv)
         }
       else
         {
+          if (!crashreporter->upload_report_code.empty())
+            {
+              wprintf(L"Your crash report's ID is %ls\n", crashreporter->upload_report_code.c_str());
+            }
+
           wprintf(L"Crash report sent! Thank you!\n");
         }
     }

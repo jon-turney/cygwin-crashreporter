@@ -24,15 +24,27 @@
 
 //
 // The all important animated hippo
-// "The hippo will dance for you while your crash is reported..."
+// "The hippos will dance for you while your crash is reported..."
 //
 
 #define ID_TIMER 1
-#define ANIMATION_FREQUENCY 30 /* Hz */
+#define ANIMATION_FREQUENCY 50 /* Hz */
 #define RPS 0.1
+#define NUM_HIPPOS_INNER 5
+#define NUM_HIPPOS_OUTER 7
+#define GEARING 1.1
 
 static double theta = 0;
 static HICON hippo;
+
+static void
+draw_hippo(HDC hdcBuffer, RECT *rc, double theta, double frac)
+{
+  int x = rc->right/2 + rc->right*frac*sin(theta) - GetSystemMetrics(SM_CXICON)/2;
+  int y = rc->bottom/2 + rc->bottom*frac*cos(theta) - GetSystemMetrics(SM_CYICON)/2;
+
+  DrawIcon(hdcBuffer, x, y, hippo);
+}
 
 // XXX: do this through subclassing DialogProc and remove hook???
 static INT_PTR WINAPI
@@ -49,8 +61,6 @@ dlgproc(HWND hWnd, UINT message, WPARAM wParam __attribute__((unused)),
         RECT rc;
         GetClientRect(hAnimWnd, &rc);
 
-        int x = (rc.right-rc.left)/2 + (rc.right-rc.left)/4*sin(theta);
-        int y = (rc.bottom-rc.top)/2 + (rc.bottom-rc.top)/4*cos(theta);
         theta = theta + (2*M_PI)*(RPS/ANIMATION_FREQUENCY);
 
         // create a bitmap to do our drawing to
@@ -63,7 +73,13 @@ dlgproc(HWND hWnd, UINT message, WPARAM wParam __attribute__((unused)),
         HBRUSH b = CreateSolidBrush(c);
         FillRect(hdcBuffer, &rc, b);
         DeleteObject(b);
-        DrawIcon(hdcBuffer, x, y, hippo);
+
+        // draw hippos
+        draw_hippo(hdcBuffer, &rc, 0, 0);
+        for (int i = 0; i < NUM_HIPPOS_INNER; i++)
+          draw_hippo(hdcBuffer, &rc, theta + i*M_PI*2/NUM_HIPPOS_INNER, 0.16);
+        for (int i = 0; i < NUM_HIPPOS_OUTER; i++)
+          draw_hippo(hdcBuffer, &rc, -theta*GEARING + i*M_PI*2/NUM_HIPPOS_OUTER, 0.33);
 
         // blt to window
         BitBlt(hdc, 0, 0, rc.right, rc.bottom, hdcBuffer, 0, 0, SRCCOPY);
@@ -130,8 +146,9 @@ ProgressPage::OnMessageApp(UINT message, WPARAM wParam __attribute__((unused)),
     {
     case WM_APP:
       {
-        // enable the next button
+        // enable and press the next button
         GetOwner()->SetButtons(PSWIZB_NEXT);
+        GetOwner()->PressButton(PSBTN_NEXT);
       }
       break;
     }
