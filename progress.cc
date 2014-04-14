@@ -24,10 +24,11 @@
 
 //
 // The all important animated hippo
+// "The hippo will dance for you while your crash is reported..."
 //
 
 #define ID_TIMER 1
-#define ANIMATION_FREQUENCY 20 /* Hz */
+#define ANIMATION_FREQUENCY 30 /* Hz */
 #define RPS 0.1
 
 static double theta = 0;
@@ -42,15 +43,36 @@ dlgproc(HWND hWnd, UINT message, WPARAM wParam __attribute__((unused)),
     {
     case WM_TIMER:
       {
-        HDC hdc = GetDC(hWnd);
+        HWND hAnimWnd = ::GetDlgItem(hWnd, IDC_PROGRESS_ANIMATION);
+        HDC hdc = GetDC(hAnimWnd);
 
-        // pixels, not dialog units!
-        int x =  170 + 50*sin(theta);
-        int y = 90 + 50*cos(theta);
-        DrawIcon(hdc, x, y, hippo);
+        RECT rc;
+        GetClientRect(hAnimWnd, &rc);
+
+        int x = (rc.right-rc.left)/2 + (rc.right-rc.left)/4*sin(theta);
+        int y = (rc.bottom-rc.top)/2 + (rc.bottom-rc.top)/4*cos(theta);
         theta = theta + (2*M_PI)*(RPS/ANIMATION_FREQUENCY);
 
-        ReleaseDC(hWnd, hdc);
+        // create a bitmap to do our drawing to
+        HDC hdcBuffer = CreateCompatibleDC(hdc);
+        HBITMAP hbmBuffer = CreateCompatibleBitmap(hdc, rc.right, rc.bottom);
+        HGDIOBJ hbmOldBuffer = SelectObject(hdcBuffer, hbmBuffer);
+
+        // erase to background and then draw hippo
+        COLORREF c = GetSysColor(COLOR_3DLIGHT);
+        HBRUSH b = CreateSolidBrush(c);
+        FillRect(hdcBuffer, &rc, b);
+        DeleteObject(b);
+        DrawIcon(hdcBuffer, x, y, hippo);
+
+        // blt to window
+        BitBlt(hdc, 0, 0, rc.right, rc.bottom, hdcBuffer, 0, 0, SRCCOPY);
+
+        SelectObject(hdcBuffer, hbmOldBuffer);
+        DeleteDC(hdcBuffer);
+        DeleteObject(hbmBuffer);
+
+        ReleaseDC(hAnimWnd, hdc);
       }
       break;
     }

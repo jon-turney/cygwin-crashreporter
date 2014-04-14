@@ -21,3 +21,4 @@
 #define IDC_DUMP_STATUS                   501
 #define IDC_UPLOAD_STATUS                 502
 #define IDC_UPLOAD_REPORT_CODE            503
+#define IDC_PROGRESS_ANIMATION            504
