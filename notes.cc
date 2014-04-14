@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, Gary R. Van Sickle.
+ * Copyright (c) 2001, 2002, 2003 Gary R. Van Sickle.
  *
  *     This program is free software; you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -13,23 +13,17 @@
  *
  */
 
-#ifndef SPLASH_H
-#define SPLASH_H
+/* This is the implementation of the NotesPage class. */
 
-// This is the header for the SplashPage class.  Since the splash page
-// has little to do, there's not much here.
+#include "resource.h"
+#include "notes.h"
 
-#include "proppage.h"
-
-class SplashPage: public PropertyPage
+NotesPage::NotesPage ()
 {
-public:
-  SplashPage ();
-  virtual ~ SplashPage ()
-  {
-  };
+}
 
-  bool Create ();
-};
-
-#endif /* SPLASH_H */
+bool
+NotesPage::Create ()
+{
+  return PropertyPage::Create (IDD_NOTES);
+}

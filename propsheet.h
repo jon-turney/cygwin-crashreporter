@@ -13,8 +13,8 @@
  *
  */
 
-#ifndef SETUP_PROPSHEET_H
-#define SETUP_PROPSHEET_H
+#ifndef PROPSHEET_H
+#define PROPSHEET_H
 
 // This is the header for the PropSheet class.  This class encapsulates a
 // Windows property sheet / wizard and interfaces with the PropertyPage class.
@@ -57,4 +57,4 @@ class PropSheet : public Window
   void PressButton (int button);
 };
 
-#endif /* SETUP_PROPSHEET_H */
+#endif /* PROPSHEET_H */

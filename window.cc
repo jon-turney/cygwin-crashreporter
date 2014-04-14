@@ -344,11 +344,11 @@ Window::SetDlgItemFont (int id, const TCHAR * fontname, int Pointsize,
   return true;
 }
 
-void
-Window::SetWindowText (const std::string& s)
-{
-  ::SetWindowText (WindowHandle, s.c_str ());
-}
+// void
+// Window::SetWindowText (const std::wstring& s)
+// {
+//   ::SetWindowTextW (WindowHandle, s.c_str ());
+// }
 
 RECT
 Window::ScreenToClient(const RECT &r) const

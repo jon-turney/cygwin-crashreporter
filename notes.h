@@ -13,23 +13,21 @@
  *
  */
 
-#ifndef SPLASH_H
-#define SPLASH_H
+#ifndef NOTES_H
+#define NOTES_H
 
-// This is the header for the SplashPage class.  Since the splash page
-// has little to do, there's not much here.
-
+// This is the header for the NotesPage class.
 #include "proppage.h"
 
-class SplashPage: public PropertyPage
+class NotesPage: public PropertyPage
 {
 public:
-  SplashPage ();
-  virtual ~ SplashPage ()
+  NotesPage ();
+  virtual ~ NotesPage ()
   {
   };
 
   bool Create ();
 };
 
-#endif /* SPLASH_H */
+#endif /* NOTES_H */

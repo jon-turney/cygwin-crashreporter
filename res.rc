@@ -31,7 +31,7 @@ BEGIN
                     ""
                     ""
                     "\r\n\r\n"
-                    "If you were working with personal or confidental information"
+                    "If you were working with personal or confidental information don't send"
                     ""
                     "",
                     IDC_STATIC, 115, 25, 195, 90
@@ -40,33 +40,31 @@ END
 
 IDD_NOTES DIALOG  0, 0, STANDARD_DIALOG_DIMS
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
-CAPTION "Cygwin crash reporter - Add description"
+CAPTION "Cygwin crash reporter - Add notes"
 FONT 8, "MS Shell Dlg"
 BEGIN
-    CONTROL         "",IDC_STATIC, "Static", SS_BLACKFRAME | SS_SUNKEN,
-                    0, 28, STANDARD_DIALOG_W, 1
     ICON            IDI_CYGWIN, IDC_STATIC, STANDARD_HEADICON_X, 0, 21, 20
-    LTEXT           "Postinstall script errors",IDC_STATIC,
-                    7, 0, 258, 8, NOT WS_GROUP
-    LTEXT           "You can describe what you were doing when the crash occured"
-                    ""
+    LTEXT           "Add notes", IDC_STATIC, 7, 0, 258, 8, NOT WS_GROUP
+    LTEXT           "You can describe what you were doing when the crash occured, "
+                    "or how to reproduce it."
                     "",
                     IDC_STATIC, 21, 9, 239, 16, NOT WS_GROUP
-    EDITTEXT        IDC_NOTES_EDIT,7, 41, 303, 112, WS_VSCROLL | WS_HSCROLL |
-                    ES_LEFT | ES_MULTILINE | ES_AUTOHSCROLL | ES_AUTOVSCROLL
-
+    CONTROL         "",IDC_STATIC, "Static", SS_BLACKFRAME | SS_SUNKEN,
+                    0, 28, STANDARD_DIALOG_W, 1
+    EDITTEXT        IDC_NOTES_EDIT,7, 41, 303, 112,
+                    ES_LEFT | ES_MULTILINE | ES_WANTRETURN | WS_BORDER | ES_AUTOHSCROLL | ES_AUTOVSCROLL
 END
 
 IDD_PROGRESS DIALOG  0, 0, STANDARD_DIALOG_DIMS
 STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
-CAPTION "Cygwin crash reporter - Collecting crash report and uploading"
+CAPTION "Cygwin crash reporter - In progress"
 FONT 8, "MS Shell Dlg"
 BEGIN
     ICON            IDI_CYGWIN, IDC_STATIC, STANDARD_HEADICON_X, 0, 21, 20
-    CONTROL         "",IDC_STATIC, "Static", SS_BLACKFRAME | SS_SUNKEN, 0, 28, STANDARD_DIALOG_W, 1
-    LTEXT           "This page displays the progress of the download or installation.",
-                    IDC_STATIC, 21, 9, 239, 16, NOT WS_GROUP
     LTEXT           "Progress", IDC_STATIC, 7, 0, 258, 8, NOT WS_GROUP
+    LTEXT           "Collecting crash report data and uploading in progress.",
+                    IDC_STATIC, 21, 9, 239, 16, NOT WS_GROUP
+    CONTROL         "",IDC_STATIC, "Static", SS_BLACKFRAME | SS_SUNKEN, 0, 28, STANDARD_DIALOG_W,1
 END
 
 IDD_DONE DIALOG  0, 0, STANDARD_DIALOG_DIMS
@@ -75,12 +73,13 @@ CAPTION "Cygwin crash reporter - Thank you"
 FONT 8, "MS Shell Dlg"
 BEGIN
     ICON            IDI_CYGWIN, IDC_STATIC, STANDARD_HEADICON_X, 0, 21, 20
+    LTEXT           "Report status", IDC_STATIC, 7, 0, 258, 8, NOT WS_GROUP
+    LTEXT           "Crash reporting completed.",
+                    IDC_STATIC, 21, 9, 239, 16, NOT WS_GROUP
     CONTROL         "", IDC_STATIC, "Static", SS_BLACKFRAME | SS_SUNKEN, 0, 28, STANDARD_DIALOG_W, 1
-    CONTROL         "", IDC_STATIC, "Static", SS_BLACKFRAME | SS_SUNKEN,
-                    0,135,STANDARD_DIALOG_W,1
-    LTEXT           "Report status", IDC_STATIC, 7, 140, 258, 8, NOT WS_GROUP
-    LTEXT           "Crash reporting completed successfully.", IDC_STATIC,
-                    21, 149, 279, 36, NOT WS_GROUP
+    LTEXT           "Minidump foo.dmp generated", IDC_DUMP_STATUS, 7, 80, 239, 8, NOT WS_GROUP
+    LTEXT           "Upload to server suceess", IDC_UPLOAD_STATUS, 7, 89, 239, 8, NOT WS_GROUP
+    LTEXT           "Report code foo", IDC_UPLOAD_REPORT_CODE, 7, 98, 239, 8, NOT WS_GROUP
 END
 
 /////////////////////////////////////////////////////////////////////////////

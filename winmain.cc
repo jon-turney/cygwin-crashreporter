@@ -11,7 +11,12 @@
  */
 
 #include "splash.h"
+#include "notes.h"
+#include "progress.h"
+#include "done.h"
+
 #include "propsheet.h"
+#include "crash_reporter.h"
 
 HINSTANCE hinstance;
 
@@ -19,9 +24,9 @@ static void
 main_display(void)
 {
   SplashPage Splash;
-  //
-  //
-  //
+  NotesPage Notes;
+  ProgressPage Progress;
+  DonePage Done;
 
   PropSheet MainWindow;
 
@@ -29,19 +34,19 @@ main_display(void)
   Window::SetAppInstance (hinstance);
 
   // Create pages
-  Splash.Create ();
-  // Notes.Create ();
-  // Progress.Create ();
-  // Done.Create ();
+  Splash.Create();
+  Notes.Create();
+  Progress.Create();
+  Done.Create();
 
   // Add pages to sheet
-  MainWindow.AddPage (&Splash);
-  // MainWindow.AddPage (&Notes);
-  // MainWindow.AddPage (&Progress);
-  // MainWindow.AddPage (&Done);
+  MainWindow.AddPage(&Splash);
+  MainWindow.AddPage(&Notes);
+  MainWindow.AddPage(&Progress);
+  MainWindow.AddPage(&Done);
 
   // Create and run the PropSheet main window
-  MainWindow.Create ();
+  MainWindow.Create();
 }
 
 int WINAPI
@@ -51,6 +56,13 @@ wWinMain(HINSTANCE hInstance,
          int nCmdShow __attribute__((unused)))
 {
   hinstance = hInstance;
+
+  // use __wargv ???
+  int argc;
+  LPWSTR *argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+
+  crashreporter = new CygwinCrashReporter;
+  crashreporter->process_command_line(argc, argv);
 
   main_display();
 

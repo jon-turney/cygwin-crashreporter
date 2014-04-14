@@ -24,24 +24,6 @@
 
 #include <shlwapi.h>
 
-// Sort of a "hidden" Windows structure.  Used in the PropSheetCallback.
-#include <pshpack1.h>
-typedef struct DLGTEMPLATEEX
-{
-  WORD dlgVer;
-  WORD signature;
-  DWORD helpID;
-  DWORD exStyle;
-  DWORD style;
-  WORD cDlgItems;
-  short x;
-  short y;
-  short cx;
-  short cy;
-}
-DLGTEMPLATEEX, *LPDLGTEMPLATEEX;
-#include <poppack.h>
-
 PropSheet::PropSheet ()
 {
 }
@@ -91,15 +73,13 @@ PropSheet::CreatePages ()
 struct PropSheetData
 {
   WNDPROC oldWndProc;
-  bool gotPage;
 
   PropSheetData ()
   {
     oldWndProc = 0;
-    gotPage = false;
   }
 
-// @@@ Ugly. Really only works because only one PropSheet is used now.
+  // @@@ Ugly. Really only works because only one PropSheet is used now.
   static PropSheetData& Instance()
   {
     static PropSheetData TheInstance;
@@ -127,12 +107,11 @@ static LRESULT CALLBACK PropSheetWndProc (HWND hwnd, UINT uMsg,
       break;
     }
 
-  return CallWindowProc (psd.oldWndProc,
-    hwnd, uMsg, wParam, lParam);
+  return CallWindowProc (psd.oldWndProc, hwnd, uMsg, wParam, lParam);
 }
 
 static int CALLBACK
-PropSheetProc (HWND hwndDlg, UINT uMsg, LPARAM lParam)
+PropSheetProc (HWND hwndDlg, UINT uMsg, LPARAM lParam  __attribute__((unused)))
 {
   switch (uMsg)
     {
@@ -148,12 +127,10 @@ PropSheetProc (HWND hwndDlg, UINT uMsg, LPARAM lParam)
         SendMessage(hwndDlg, WM_SETICON, ICON_BIG, (LPARAM)LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_HIPPO)));
         /*
           Hook into the window proc.
-          We need to catch some messages for resizing.
         */
         PropSheetData::Instance().oldWndProc =
           (WNDPROC)GetWindowLongPtr (hwndDlg, GWLP_WNDPROC);
-        SetWindowLongPtr (hwndDlg, GWLP_WNDPROC,
-                          (LONG_PTR)&PropSheetWndProc);
+        SetWindowLongPtr (hwndDlg, GWLP_WNDPROC, (LONG_PTR)&PropSheetWndProc);
       }
       return TRUE;
     }

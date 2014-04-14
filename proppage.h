@@ -13,8 +13,8 @@
  *
  */
 
-#ifndef SETUP_PROPPAGE_H
-#define SETUP_PROPPAGE_H
+#ifndef PROPPAGE_H
+#define PROPPAGE_H
 
 // This is the header for the PropertyPage class.  It works closely with the
 // PropSheet class to implement a single page of the property sheet.
@@ -45,19 +45,13 @@ class PropertyPage: public Window
   static INT_PTR CALLBACK DialogProcReflector (HWND hwnd, UINT message,
                                                WPARAM wParam, LPARAM lParam);
 
-  // subclass the static control with this winproc
-  static LRESULT CALLBACK urlWinProc (HWND hwnd, UINT uMsg, WPARAM wParam,
-              LPARAM lParam);
-
 protected:
-    virtual INT_PTR CALLBACK DialogProc (UINT message, WPARAM wParam,
+  virtual INT_PTR CALLBACK DialogProc (UINT message, WPARAM wParam,
                                          LPARAM lParam);
-    virtual INT_PTR CALLBACK OnMouseWheel (UINT message, WPARAM wParam,
-                                           LPARAM lParam);
 
 public:
-    PropertyPage ();
-    virtual ~ PropertyPage ();
+  PropertyPage ();
+  virtual ~ PropertyPage ();
 
   PROPSHEETPAGE *GetPROPSHEETPAGEPtr ()
   {
@@ -123,10 +117,6 @@ public:
   {
     return true;
   };
-  virtual long OnUnattended ()
-  {
-    return -2;
-  };
 
   PropSheet *GetOwner () const
   {
@@ -134,4 +124,4 @@ public:
   };
 };
 
-#endif /* SETUP_PROPPAGE_H */
+#endif /* PROPPAGE_H */

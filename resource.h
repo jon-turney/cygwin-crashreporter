@@ -18,3 +18,6 @@
 
 #define IDC_STATIC                        -1
 #define IDC_NOTES_EDIT                    500
+#define IDC_DUMP_STATUS                   501
+#define IDC_UPLOAD_STATUS                 502
+#define IDC_UPLOAD_REPORT_CODE            503

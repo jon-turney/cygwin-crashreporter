@@ -3,8 +3,9 @@ bin_PROGRAMS=cygwin_crash_reporter_cli cygwin_crash_reporter_gui
 AM_LDFLAGS=-static-libgcc -static-libstdc++ -municode
 
 cygwin_crash_reporter_cli_SOURCES=main.cpp
-cygwin_crash_reporter_gui_SOURCES=winmain.cc splash.cc window.cc proppage.cc \
-				propsheet.cc res.rc
+cygwin_crash_reporter_gui_SOURCES=winmain.cc window.cc proppage.cc propsheet.cc \
+				  splash.cc notes.cc progress.cc done.cc res.rc \
+				  crash_reporter.cc
 
 cygwin_crash_reporter_cli_LDADD=-lbreakpad_client -lwininet
 cygwin_crash_reporter_gui_LDADD=-lbreakpad_client -lwininet -lgdi32 -lcomctl32
