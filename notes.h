@@ -22,12 +22,13 @@
 class NotesPage: public PropertyPage
 {
 public:
-  NotesPage ();
-  virtual ~ NotesPage ()
+  NotesPage();
+  virtual ~ NotesPage()
   {
   };
 
-  bool Create ();
+  bool Create();
+  virtual void OnDeactivate();
 };
 
 #endif /* NOTES_H */

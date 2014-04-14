@@ -150,6 +150,12 @@ CygwinCrashReporter::create_temp_dir(void)
   return 0;
 }
 
+void
+CygwinCrashReporter::set_notes(const wchar_t *notes)
+{
+  reporter_notes = notes;
+}
+
 bool
 CygwinCrashReporter::crash_reporter_callback(const wchar_t* dump_path,
                                              const wchar_t* minidump_id,
@@ -181,7 +187,9 @@ CygwinCrashReporter::crash_reporter_callback(const wchar_t* dump_path,
   std::map<std::wstring,std::wstring> parameters;
 
   parameters[L"Uploader"] = L"" PACKAGE_NAME "/" PACKAGE_VERSION;
-  parameters[L"Notes"] = L"Custom Note from Breakpad Test";
+
+  if (!reporter_notes.empty())
+    parameters[L"Notes"] = reporter_notes;
 
   google_breakpad::CrashReportSender *pSender = new google_breakpad::CrashReportSender(checkpoint_file);
   pSender->set_max_reports_per_day(10);

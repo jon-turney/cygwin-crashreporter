@@ -29,6 +29,7 @@ public:
   CygwinCrashReporter();
   int process_command_line(int argc, wchar_t **argv);
   int do_dump(void);
+  void set_notes(const wchar_t *notes);
 
   // should be made private via friend callback
   bool crash_reporter_callback(const wchar_t* dump_path,
@@ -49,6 +50,7 @@ private:
   bool verbose;
   bool nokill;
   std::wstring server_url;
+  std::wstring reporter_notes;
 
   // implementation helpers
   void usage(FILE *stream, int status);
