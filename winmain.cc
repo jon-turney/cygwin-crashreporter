@@ -66,5 +66,5 @@ wWinMain(HINSTANCE hInstance,
 
   main_display();
 
-  return 0;
+  return crashreporter->overall_succeeded ? 0 : -1;
 }

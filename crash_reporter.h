@@ -37,6 +37,7 @@ public:
                                bool succeeded);
 
   // result state -- XXX: should be private!
+  bool overall_succeeded;
   std::wstring minidump_filename;
   bool dump_succeeded;
   bool upload_succeeded;

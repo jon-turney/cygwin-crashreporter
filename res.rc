@@ -31,9 +31,9 @@ BEGIN
                     ""
                     ""
                     "\r\n\r\n"
-                    "Crash reports are public."
-                    "If you were working with <b>personal or confidental</b> information when the crash occured,"
-                    "don't send it."
+                    "Because crash reports are public, "
+                    "if you were working with <b>personal or confidental</b> information when the crash occured, "
+                    "you should <b>not</b> submit a crash report."
                     ""
                     "",
                     IDC_STATIC, 115, 25, 195, 90

@@ -145,6 +145,7 @@ PropertyPage::DialogProc (UINT message, WPARAM wParam, LPARAM lParam)
               {
                 // Disable "Next", enable "Finish" on last page
                 GetOwner ()->SetButtons (PSWIZB_BACK | PSWIZB_FINISH);
+                PropSheet_SetFinishText(GetOwner()->GetHWND(), "Finish");
               }
               else
               {

@@ -25,7 +25,7 @@
 #include <breakpad/client/windows/sender/crash_report_sender.h>
 
 #define DIRECTORY L"\\dumps"
-#define SERVER_URL L"http://wollstonecraft/addreport.php"
+#define SERVER_URL L"http://crashreportserver/addreport.php"
 #define CHECKPOINT_FILE L"crash_checkpoint.dat"
 
 // global singleton instance
@@ -39,6 +39,7 @@ CygwinCrashReporter::CygwinCrashReporter()
   nokill = FALSE;
   server_url = SERVER_URL;
 
+  overall_succeeded = FALSE;
   dump_succeeded = FALSE;
   upload_succeeded = FALSE;
   upload_result = google_breakpad::RESULT_FAILED;
@@ -254,7 +255,7 @@ CygwinCrashReporter::do_dump(void)
       return -1;
     }
 
-  bool success = google_breakpad::ExceptionHandler::WriteMinidumpForChild(
+  overall_succeeded = google_breakpad::ExceptionHandler::WriteMinidumpForChild(
      process, // process handle
      0, // child_blamed_thread
      dumps_dir, // dump path
@@ -273,5 +274,5 @@ CygwinCrashReporter::do_dump(void)
 
   fflush(stdout);
 
-  return success;
+  return overall_succeeded;
 }

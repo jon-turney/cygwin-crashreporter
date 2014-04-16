@@ -102,7 +102,8 @@ static LRESULT CALLBACK PropSheetWndProc (HWND hwnd, UINT uMsg,
         break;
     areyousure:
       if (MessageBox(hwnd, "Are you sure you want to cancel?",
-                     "Cygwin crash reporter", MB_YESNO) == IDNO)
+                     "Cygwin crash reporter",
+                     MB_ICONWARNING | MB_YESNO) == IDNO)
         return 0;
       break;
     }
