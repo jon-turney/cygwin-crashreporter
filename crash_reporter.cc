@@ -188,6 +188,7 @@ CygwinCrashReporter::crash_reporter_callback(const wchar_t* dump_path,
   std::map<std::wstring,std::wstring> parameters;
 
   parameters[L"Uploader"] = L"" PACKAGE_NAME "/" PACKAGE_VERSION;
+  parameters[L"MinidumpID"] = minidump_id;
 
   if (!reporter_notes.empty())
     parameters[L"Notes"] = reporter_notes;
