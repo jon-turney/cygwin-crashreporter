@@ -1,14 +1,30 @@
 /*
- *
- *     This program is free software; you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation; either version 2 of the License, or
- *     (at your option) any later version.
- *
- *     A copy of the GNU General Public License can be found at
- *     http://www.gnu.org/
- *
- */
+  winmain.cc
+
+  Copyright 2014 Jon TURNEY
+
+  This file is part of cygwin_crash_reporter
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
+//
+// cygwin_crash_reporter_gui is compatible with CYGWIN's error_start facility
+// provides a simple GUI to inform the user of progress as it uses breakpad to
+// write a minidump and upload it to a crash report server.
+//
 
 #include "splash.h"
 #include "notes.h"
@@ -17,8 +33,6 @@
 
 #include "propsheet.h"
 #include "crash_reporter.h"
-
-HINSTANCE hinstance;
 
 static void
 main_display(void)
@@ -29,9 +43,6 @@ main_display(void)
   DonePage Done;
 
   PropSheet MainWindow;
-
-  // Init window class lib
-  Window::SetAppInstance (hinstance);
 
   // Create pages
   Splash.Create();
@@ -55,9 +66,10 @@ wWinMain(HINSTANCE hInstance,
          PWSTR pCmdLine __attribute__((unused)),
          int nCmdShow __attribute__((unused)))
 {
-  hinstance = hInstance;
+  // Init window class lib
+  Window::SetAppInstance(hInstance);
 
-  // use __wargv ???
+  // XXX: use __wargv ???
   int argc;
   LPWSTR *argv = CommandLineToArgvW(GetCommandLineW(), &argc);
 

@@ -1,18 +1,13 @@
-The PropSheet, PropPage and Window classes were written by Gary R. Van Sickle 
+The PropSheet, PropPage and Window classes were written by Gary R. Van Sickle
 and subsequently modified by a cast of thousands for Cygwin setup.
 
 The hippo ico is credited as follows:
 
 Original Artwork
   hippo_orig.svg
-  http://openclipart.org/media/files/TheStructorr/1751 was declared public 
+  http://openclipart.org/media/files/TheStructorr/1751 was declared public
 domain by the artist, Michal Pecyna.
 
-The version included here (hippo.svg) was modified by Charles Wilson, and used 
-to create hippo.ico via inkscape and gimp.  Both are released under the Creative 
+The version included here (hippo.svg) was modified by Charles Wilson, and used
+to create hippo.ico via inkscape and gimp.  Both are released under the Creative
 Commons Attribution ShareAlike 3.0 (CC-BY-SA 3.0) license.
-
-
-
-
-

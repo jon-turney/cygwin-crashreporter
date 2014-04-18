@@ -1,6 +1,8 @@
 Makefile
 Makefile.in
+ar-lib
 autom4te.cache
+compile
 config.guess
 config.sub
 configure
