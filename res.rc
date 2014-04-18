@@ -25,21 +25,21 @@ STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE | WS_CAPTION
 CAPTION "Cygwin crash reporter"
 FONT 8, "MS Shell Dlg"
 BEGIN
-    LTEXT           "We're sorry.  Something went wrong!",
-                    IDC_STATIC, 115, 1, 195, 24
+    LTEXT           "We're sorry.  Something went wrong!"
+                    "\r\n\r\n",
+                    IDC_BOLD, 115, 1, STANDARD_DIALOG_W - 115, 16
     LTEXT           "The Cygwin crash reporter will submit a crash report for you."
-                    ""
-                    "\r\n\r\n"
-                    ""
-                    "\r\n\r\n"
-                    "Because crash reports are public, "
-                    "if you were working with <b>personal or confidental</b> information when the crash occured, "
-                    "you should <b>not</b> submit a crash report."
+                    "\r\n\r\n",
+                    IDC_STATIC, 115, 17, STANDARD_DIALOG_W - 115, 16
+    LTEXT           "Note: crash reports are public."
+                    "\r\n\r\n",
+                    IDC_BOLD, 115, 33, STANDARD_DIALOG_W - 115, 16
+    LTEXT           "If you were working with personal or confidental information when the crash occured, "
+                    "you should not submit a crash report."
                     "\r\n\r\n"
                     "Otherwise, please help to improve Cygwin by submitting a crash report."
-                    ""
-                    "",
-                    IDC_STATIC, 115, 25, 195, 90
+                    "\r\n\r\n",
+                    IDC_STATIC, 115, 49, STANDARD_DIALOG_W - 115, 100
     ICON            IDI_CYGWIN, IDC_STATIC, 4, 6, 0, 0, SS_ICON | SS_REALSIZEIMAGE
 END
 
@@ -55,7 +55,7 @@ BEGIN
                     "",
                     IDC_STATIC, 21, 9, 239, 16, NOT WS_GROUP
     CONTROL         "", IDC_STATIC, "Static", SS_BLACKFRAME | SS_SUNKEN, 0, 28, STANDARD_DIALOG_W, 1
-    EDITTEXT        IDC_NOTES_EDIT, 0, 41, STANDARD_DIALOG_W, STANDARD_DIALOG_H - 41, ES_LEFT | ES_MULTILINE | ES_WANTRETURN | WS_BORDER | ES_AUTOHSCROLL | ES_AUTOVSCROLL
+    EDITTEXT        IDC_NOTES_EDIT, 8, 40, STANDARD_DIALOG_W - 16, STANDARD_DIALOG_H - 41, ES_LEFT | ES_MULTILINE | ES_WANTRETURN | WS_BORDER | ES_AUTOHSCROLL | ES_AUTOVSCROLL
 END
 
 IDD_PROGRESS DIALOG  0, 0, STANDARD_DIALOG_DIMS
@@ -68,7 +68,7 @@ BEGIN
     LTEXT           "Collecting crash report data and uploading...",
                     IDC_STATIC, 21, 9, 239, 16, NOT WS_GROUP
     CONTROL         "", IDC_STATIC, "Static", SS_BLACKFRAME | SS_SUNKEN, 0, 28, STANDARD_DIALOG_W, 1
-    CONTROL         "", IDC_PROGRESS_ANIMATION, "Static", SS_BLACKFRAME | SS_SUNKEN, 0, 41, STANDARD_DIALOG_W, STANDARD_DIALOG_H - 41
+    CONTROL         "", IDC_PROGRESS_ANIMATION, "Static", SS_BLACKFRAME | SS_SUNKEN, 8, 40, STANDARD_DIALOG_W - 16, STANDARD_DIALOG_H - 41
 END
 
 IDD_DONE DIALOG  0, 0, STANDARD_DIALOG_DIMS
@@ -81,9 +81,9 @@ BEGIN
     LTEXT           "Thank you for helping to make Cygwin better!",
                     IDC_STATIC, 21, 9, 239, 16, NOT WS_GROUP
     CONTROL         "", IDC_STATIC, "Static", SS_BLACKFRAME | SS_SUNKEN, 0, 28, STANDARD_DIALOG_W, 1
-    LTEXT           "Minidump file status unknown", IDC_DUMP_STATUS, 7, 80, 239, 8, NOT WS_GROUP | SS_NOTIFY
+    LTEXT           "Minidump file status unknown", IDC_DUMP_STATUS, 7, 72, 239, 8, NOT WS_GROUP | SS_NOTIFY
     LTEXT           "Upload status unknown ", IDC_UPLOAD_STATUS, 7, 89, 239, 8, NOT WS_GROUP | SS_NOTIFY
-    LTEXT           "Report code is unknown", IDC_UPLOAD_REPORT_CODE, 7, 98, 239, 8, NOT WS_GROUP | SS_NOTIFY
+    LTEXT           "Report code is unknown", IDC_UPLOAD_REPORT_CODE, 7, 106, 239, 8, NOT WS_GROUP | SS_NOTIFY
 END
 
 /////////////////////////////////////////////////////////////////////////////

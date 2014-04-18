@@ -19,11 +19,58 @@
    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-// This is the implementation of the SplashPage class.  Since the splash page
-// has little to do, there's not much here.
+// This is the implementation of the SplashPage class.
 
 #include "resource.h"
 #include "splash.h"
+
+static HFONT hBoldFont;
+
+static INT_PTR WINAPI
+dlgproc(HWND hWnd __attribute__((unused)), UINT message, WPARAM wParam,
+        LPARAM lParam)
+{
+  switch (message)
+    {
+    case WM_CTLCOLORSTATIC:
+      {
+        HDC hdc = (HDC)wParam;
+        HWND hwndCtl = (HWND)lParam;
+
+        if (GetDlgCtrlID(hwndCtl) == IDC_BOLD)
+          {
+            // get the current font, add bold, and set it back
+            if (hBoldFont == 0)
+              {
+                TEXTMETRIC tm;
+                GetTextMetrics(hdc, &tm);
+
+                LOGFONT lf;
+                memset ((void *)&lf, 0, sizeof(LOGFONT));
+                lf.lfUnderline = FALSE;
+                lf.lfHeight = tm.tmHeight;
+                lf.lfWeight = FW_BOLD; // tm.tmWeight;
+                lf.lfItalic = tm.tmItalic;
+                lf.lfStrikeOut = tm.tmStruckOut;
+                lf.lfCharSet = tm.tmCharSet;
+                lf.lfOutPrecision = OUT_DEFAULT_PRECIS;
+                lf.lfClipPrecision = CLIP_DEFAULT_PRECIS;
+                lf.lfQuality = DEFAULT_QUALITY;
+                lf.lfPitchAndFamily = tm.tmPitchAndFamily;
+                GetTextFace(hdc, LF_FACESIZE, lf.lfFaceName);
+
+                hBoldFont = CreateFontIndirect(&lf);
+              }
+
+            SelectObject(hdc, hBoldFont);
+
+            return 0; // use default colors
+          }
+      }
+    }
+
+  return 0;
+}
 
 SplashPage::SplashPage()
 {
@@ -32,5 +79,5 @@ SplashPage::SplashPage()
 bool
 SplashPage::Create()
 {
-  return PropertyPage::Create(IDD_SPLASH);
+  return PropertyPage::Create(dlgproc, IDD_SPLASH);
 }
