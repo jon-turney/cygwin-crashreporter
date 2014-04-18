@@ -25,135 +25,94 @@
 #include <string>
 
 #include <windows.h>
-#include <commctrl.h>
 
 class Window
 {
-  static ATOM WindowClassAtom;
-  static HINSTANCE AppInstance;
-
-  virtual bool registerWindowClass ();
-protected:
-  static LRESULT CALLBACK FirstWindowProcReflector (HWND hwnd, UINT uMsg,
-                                                    WPARAM wParam,
-                                                    LPARAM lParam);
-private:
-  static LRESULT CALLBACK WindowProcReflector (HWND hwnd, UINT uMsg,
-                                               WPARAM wParam, LPARAM lParam);
-
-  // Our Windows(tm) window handle.
-  HWND WindowHandle;
-
-  Window *Parent;
-
-  // contains handles to fonts we've created
-  // that are to be deleted in our dtor
-  std::vector<HFONT> Fonts;
-
-  // if we have activated tool tips this will contain the handle
-  HWND TooltipHandle;
-
-  // maps a control ID to a string resource ID
-  std::map<int, int> TooltipStrings;
-
-  // Recursive count of number of times we've called SetBusy,
-  // so that we only reset the cursor when we've cleared it
-  // the same number of times.
-  int BusyCount;
-
-  // Saved old cursor handle, only while BusyCount is non-zero.
-  HCURSOR OldCursor;
-
-  // Handle to busy cursor (loaded first time needed, NULL until then).
-  HCURSOR BusyCursor;
-
-protected:
-  void SetHWND (HWND h)
-  {
-    WindowHandle = h;
-  };
-  void setParent(Window *aParent)
-  {
-    Parent = aParent;
-  };
-
 public:
-  Window ();
-  virtual ~ Window ();
+  Window();
+  virtual ~Window();
 
-  virtual bool Create (Window * Parent = NULL,
+  virtual bool Create(Window * Parent = NULL,
                        DWORD Style =
                        WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_CLIPCHILDREN);
 
-  static void SetAppInstance (HINSTANCE h)
+  static void SetAppInstance(HINSTANCE h)
   {
     // This only has to be called once in the entire app, before
     // any Windows are created.
     AppInstance = h;
   };
 
-  virtual LRESULT WindowProc (UINT uMsg, WPARAM wParam, LPARAM lParam);
-  virtual bool MessageLoop ();
+  virtual LRESULT WindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-  void Show (int State);
+  //  void Show(int State);
 
-  HWND GetHWND () const
+  HWND GetHWND() const
   {
-    // Ideally this could be hidden from the user completely.
     return WindowHandle;
   };
-  static HINSTANCE GetInstance ()
+
+  static HINSTANCE GetInstance()
   {
     return AppInstance;
   };
 
-  Window *GetParent () const
+  Window *GetParent() const
   {
     return Parent;
   };
-  HWND GetDlgItem (int id) const
+
+  HWND GetDlgItem(int id) const
   {
-    return::GetDlgItem (GetHWND (), id);
+    return ::GetDlgItem(GetHWND (), id);
   };
-  bool SetDlgItemFont (int id, const TCHAR * fontname, int Pointsize,
-                       int Weight = FW_NORMAL, bool Italic =
-                       false, bool Underline = false, bool Strikeout = false);
 
-  UINT IsButtonChecked (int nIDButton) const;
+  void PostMessageNow(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0);
 
-  void PostMessageNow (UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0);
-
-  virtual bool OnMessageApp (UINT uMsg  __attribute__((unused)),
-                             WPARAM wParam __attribute__((unused)),
-                             LPARAM lParam __attribute__((unused)))
+  virtual bool OnMessageApp(UINT uMsg  __attribute__((unused)),
+                            WPARAM wParam __attribute__((unused)),
+                            LPARAM lParam __attribute__((unused)))
   {
     // Not processed by default.  Override in derived classes to
     // do something with app messages if you need to.
     return false;
   };
 
-  virtual bool OnMessageCmd (int id __attribute__((unused)),
-                             HWND hwndctl __attribute__((unused)),
-                             UINT code __attribute__((unused)))
+  virtual bool OnMessageCmd(int id __attribute__((unused)),
+                            HWND hwndctl __attribute__((unused)),
+                            UINT code __attribute__((unused)))
   {
     // Not processed by default.  Override in derived classes to
     // do something with command messages if you need to.
     return false;
   };
 
-  RECT GetWindowRect() const;
-  RECT GetClientRect() const;
+protected:
+  static LRESULT CALLBACK FirstWindowProcReflector(HWND hwnd, UINT uMsg,
+                                                   WPARAM wParam,
+                                                   LPARAM lParam);
 
-  // Reposition the window
-  bool MoveWindow(long x, long y, long w, long h, bool Repaint = true);
+  void SetHWND(HWND h)
+  {
+    WindowHandle = h;
+  };
 
-  RECT ScreenToClient(const RECT &r) const;
+  void setParent(Window *aParent)
+  {
+    Parent = aParent;
+  };
 
-  // Call this to set an hourglass cursor.
-  void SetBusy (void);
-  // Call this to reset to normal cursor.  It must be called
-  // once for each call to SetBusy; they nest recursively.
-  void ClearBusy (void);
+private:
+  static LRESULT CALLBACK WindowProcReflector(HWND hwnd, UINT uMsg,
+                                              WPARAM wParam, LPARAM lParam);
+
+  virtual bool registerWindowClass();
+
+  static ATOM WindowClassAtom;
+  static HINSTANCE AppInstance;
+
+  HWND WindowHandle;   // Our Windows(tm) window handle.
+  Window *Parent;
 };
 
 #endif /* WINDOW_H */
