@@ -46,14 +46,14 @@ DonePage::SetControlText(int nIDDlgItem, const std::wstring &s)
 void
 DonePage::OnActivate(void)
 {
-  // disable back button
+  // disable back button, display finish button
   GetOwner()->SetButtons(PSWIZB_FINISH);
 
   // disable the cancel button
   // XXX: sysmenu close is still hooked up to cancel
   SendMessage(GetOwner()->GetHWND(), PSM_CANCELTOCLOSE, 0, 0);
 
-  // show the results of the report operation
+  // show the results of the operation
   if (!crashreporter->dump_succeeded)
     {
       SetControlText(IDC_DUMP_STATUS, L"Minidump generation failed");

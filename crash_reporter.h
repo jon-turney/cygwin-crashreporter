@@ -28,13 +28,8 @@ class CygwinCrashReporter
 public:
   CygwinCrashReporter();
   int process_command_line(int argc, wchar_t **argv);
-  int do_dump(void);
+  void do_dump(void);
   void set_notes(const wchar_t *notes);
-
-  // should be made private via friend callback
-  bool crash_reporter_callback(const wchar_t* dump_path,
-                               const wchar_t* minidump_id,
-                               bool succeeded);
 
   // result state -- XXX: should be private!
   bool overall_succeeded;
@@ -57,6 +52,14 @@ private:
   void usage(FILE *stream, int status);
   void print_version(void);
   int create_temp_dir(void);
+  bool crash_reporter_callback(const wchar_t* dump_path,
+                               const wchar_t* minidump_id,
+                               bool succeeded);
+
+  friend bool callback_friend(CygwinCrashReporter *context,
+                              const wchar_t* dump_path,
+                              const wchar_t* minidump_id,
+                              bool succeeded);
 };
 
 // the global instance we use

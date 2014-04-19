@@ -32,7 +32,7 @@ wmain(int argc, wchar_t **argv)
 {
   crashreporter = new CygwinCrashReporter;
   crashreporter->process_command_line(argc, argv);
-  bool success = crashreporter->do_dump();
+  crashreporter->do_dump();
 
   if (!crashreporter->dump_succeeded)
     {
@@ -55,5 +55,5 @@ wmain(int argc, wchar_t **argv)
         }
     }
 
-  return success ? 0 : -1;
+  return crashreporter->overall_succeeded ? 0 : -1;
 }

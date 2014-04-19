@@ -234,19 +234,26 @@ CygwinCrashReporter::crash_reporter_callback(const wchar_t* dump_path,
   return (result == google_breakpad::RESULT_SUCCEEDED);
 }
 
+bool
+callback_friend(CygwinCrashReporter *context, const wchar_t* dump_path,
+                const wchar_t* minidump_id, bool succeeded)
+{
+  return context->crash_reporter_callback(dump_path, minidump_id, succeeded);
+}
+
 static bool
 callback(const wchar_t* dump_path, const wchar_t* minidump_id, void* context,
          EXCEPTION_POINTERS* exinfo __attribute__((unused)),
          MDRawAssertionInfo* assertion  __attribute__((unused)), bool succeeded)
 {
-  return ((CygwinCrashReporter *)context)->crash_reporter_callback(dump_path, minidump_id, succeeded);
+  return callback_friend((CygwinCrashReporter *)context, dump_path, minidump_id, succeeded);
 }
 
-int
+void
 CygwinCrashReporter::do_dump(void)
 {
   if (create_temp_dir())
-    return -1;
+    return;
 
   HANDLE process = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_TERMINATE,
                                 FALSE,
@@ -254,7 +261,7 @@ CygwinCrashReporter::do_dump(void)
   if (process == NULL)
     {
       wprintf(L"Error opening process %d\n", pid);
-      return -1;
+      return;
     }
 
   overall_succeeded = google_breakpad::ExceptionHandler::WriteMinidumpForChild(
@@ -275,6 +282,4 @@ CygwinCrashReporter::do_dump(void)
   CloseHandle(process);
 
   fflush(stdout);
-
-  return overall_succeeded;
 }

@@ -135,7 +135,7 @@ Window::registerWindowClass()
       wc.lpfnWndProc = Window::FirstWindowProcReflector; // Our default window procedure.  This replaces itself
                                                          // on the first call with the simpler Window::WindowProcReflector().
       wc.cbClsExtra = 0;                                 // No class bytes
-      wc.cbWndExtra = 0; // XXX: 4;       // One pointer to REFLECTION_INFO in the extra window instance bytes
+      wc.cbWndExtra = 0;                                 // No window bytes
       wc.hInstance = GetInstance();                      // The app instance
       wc.hIcon = NULL;                                   // Use a bunch of system defaults for the GUI elements
       wc.hIconSm = NULL;

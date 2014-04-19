@@ -50,7 +50,7 @@ dlgproc(HWND hWnd __attribute__((unused)), UINT message, WPARAM wParam,
                 memset ((void *)&lf, 0, sizeof(LOGFONT));
                 lf.lfUnderline = FALSE;
                 lf.lfHeight = tm.tmHeight;
-                lf.lfWeight = FW_BOLD; // tm.tmWeight;
+                lf.lfWeight = FW_BOLD;
                 lf.lfItalic = tm.tmItalic;
                 lf.lfStrikeOut = tm.tmStruckOut;
                 lf.lfCharSet = tm.tmCharSet;
@@ -63,7 +63,8 @@ dlgproc(HWND hWnd __attribute__((unused)), UINT message, WPARAM wParam,
                 hBoldFont = CreateFontIndirect(&lf);
               }
 
-            SelectObject(hdc, hBoldFont);
+            if (hBoldFont)
+              SelectObject(hdc, hBoldFont);
 
             return 0; // use default colors
           }
