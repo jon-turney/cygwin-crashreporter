@@ -2,7 +2,7 @@
 //
 // res.rc
 //
-// Resources for cygwin_crash_reporter_gui
+// Resources for cygwin-crashreporter-gui
 //
 
 #include "resource.h"
@@ -94,7 +94,7 @@ END
 // Manifest
 //
 
-CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "cygwin_crash_reporter_gui.exe.manifest"
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "cygwin-crashreporter-gui.exe.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //

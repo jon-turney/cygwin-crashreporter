@@ -1,17 +1,17 @@
-.TH cygwin_crash_reporter 1 @PACKAGE_VERSION@
+.TH cygwin-crashreporter 1 @PACKAGE_VERSION@
 .SH NAME
-cygwin_crash_reporter \- A crash reporting tool for cygwin
+cygwin-crashreporter \- A crash reporting tool for cygwin
 
 .SH SYNOPSIS
-.B cygwin_crash_reporter_cli [OPTIONS] IGNORED_FILENAME WIN32PID
+.B cygwin-crashreporter-cli [OPTIONS] IGNORED_FILENAME WIN32PID
 
-.B cygwin_crash_reporter_gui [OPTIONS] IGNORED_FILENAME WIN32PID
+.B cygwin-crashreporter-gui [OPTIONS] IGNORED_FILENAME WIN32PID
 
 .SH DESCRIPTION
-\fIcygwin_crash_reporter\fP is crash reporting tool for Cygwin, which creates a
+\fIcygwin-crashreporter\fP is crash reporting tool for Cygwin, which creates a
 minidump of the specified process and uploads it to a reporting server.
 
-\fIcygwin_crash_reporter\fP can be used with Cygwin's JIT debugging facility in
+\fIcygwin-crashreporter\fP can be used with Cygwin's JIT debugging facility in
 exactly the same way as \fIdumper(1)\fP.
 
 For compatibility with \fIdumper(1)\fP, a filename argument must be provided
@@ -19,7 +19,7 @@ which is ignored, and the target process is terminated unless the -n option is
 given.
 
 .SH OPTIONS
-\fIcygwin_crash_reporter\fP accepts the following optional command line switches:
+\fIcygwin-crashreporter\fP accepts the following optional command line switches:
 
 .TP 8
 .B \-d
@@ -57,6 +57,6 @@ dumper(1), minidumper(1)
 Yes.
 
 .SH AUTHORS
-cygwin_crash_reporter was written by Jon Turney.  It is a simple wrapper around
+cygwin-crashreporter was written by Jon Turney.  It is a simple wrapper around
 the breakpad library which does the actual work of creating a minidump and
 uploading it to a crash reporting server.

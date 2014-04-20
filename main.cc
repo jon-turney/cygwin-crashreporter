@@ -3,7 +3,7 @@
 
   Copyright 2014 Jon TURNEY
 
-  This file is part of cygwin_crash_reporter
+  This file is part of cygwin-crashreporter
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 */
 
 //
-// cygwin_crash_reporter_cli is compatible with CYGWIN's error_start facility
+// cygwin-crashreporter-cli is compatible with CYGWIN's error_start facility
 // and uses breakpad to write a minidump and upload it to a crash report server.
 //
 
