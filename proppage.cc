@@ -93,9 +93,9 @@ PropertyPage::DialogProcReflector (HWND hwnd, UINT message, WPARAM wParam,
 {
   PropertyPage *This;
 
-  This = (PropertyPage *) GetWindowLongPtr (hwnd, DWLP_USER);
+  This = (PropertyPage *)GetWindowLongPtr(hwnd, DWLP_USER);
 
-  return This->DialogProc (message, wParam, lParam);
+  return This->DialogProc(message, wParam, lParam);
 }
 
 INT_PTR CALLBACK

@@ -69,7 +69,6 @@ wWinMain(HINSTANCE hInstance,
   // Init window class lib
   Window::SetAppInstance(hInstance);
 
-  // XXX: use __wargv ???
   int argc;
   LPWSTR *argv = CommandLineToArgvW(GetCommandLineW(), &argc);
 

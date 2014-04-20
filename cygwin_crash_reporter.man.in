@@ -41,7 +41,14 @@ Set the upload server URL.
 Display the version number and exit.
 
 .SH "ENVIRONMENT VARIABLES"
-TBD
+.B CYGWIN_CRASHREPORTER_URL
+Sets the URL that the crash reporter will submit reports to.
+.B CYGWIN_CRASHREPORTER_NO_DELETE_DUMP
+Don't delete the crash report dump file after submitting it to the
+server. Minidumps are placed in a subdirectory of the directory returned
+by GetTempPath().
+.B CYGWIN_CRASHREPORTER_NO_REPORT
+Save the minidump file but don't send the report to the server.
 
 .SH "SEE ALSO"
 dumper(1), minidumper(1)

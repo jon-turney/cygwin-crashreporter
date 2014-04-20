@@ -21,7 +21,7 @@ case $host in
     ;;
 esac
 
-CXXFLAGS="-g -O0 -Wall -Wextra $CXXFLAGS"
+CXXFLAGS="-g -O0 -Wall -Wextra -D_FORTIFY_SOURCE=2 $CXXFLAGS"
 
 AC_CONFIG_FILES([Makefile cygwin_crash_reporter.man])
 AC_OUTPUT

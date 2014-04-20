@@ -39,6 +39,13 @@ CygwinCrashReporter::CygwinCrashReporter()
   verbose = FALSE;
   nokill = FALSE;
   server_url = SERVER_URL;
+  nodelete = FALSE;
+
+  const wchar_t *env_server_url = _wgetenv(L"CYGWIN_CRASHREPORTER_URL");
+  if (env_server_url)
+    server_url = env_server_url;
+
+  nodelete = (!!_wgetenv(L"CYGWIN_CRASHREPORTER_NO_DELETE_DUMP"));
 
   overall_succeeded = FALSE;
   dump_succeeded = FALSE;
@@ -176,6 +183,14 @@ CygwinCrashReporter::crash_reporter_callback(const wchar_t* dump_path,
       return FALSE;
     }
 
+  if (_wgetenv(L"CYGWIN_CRASHREPORTER_NO_REPORT"))
+    {
+      if (verbose)
+        wprintf(L"Crash report uploading is disabled\n");
+
+      return TRUE;
+    }
+
   wchar_t checkpoint_file[MAX_PATH+1];
   wcscpy(checkpoint_file, dumps_dir);
   wcscat(checkpoint_file, L"\\" CHECKPOINT_FILE);
@@ -199,7 +214,7 @@ CygwinCrashReporter::crash_reporter_callback(const wchar_t* dump_path,
   google_breakpad::ReportResult result = pSender->SendCrashReport(server_url, parameters, minidump_path, &upload_report_code);
 
   if (verbose)
-    wprintf(L"Crash report upload result %d, report code '%ls'\n", result, upload_report_code.c_str());
+    wprintf(L"crash report upload result %d, report code '%ls'\n", result, upload_report_code.c_str());
 
   if (result == google_breakpad::RESULT_SUCCEEDED)
     {
@@ -229,7 +244,24 @@ CygwinCrashReporter::crash_reporter_callback(const wchar_t* dump_path,
 
   delete pSender;
 
-  // XXX: delete dump file after sending?
+  if (!nodelete)
+    {
+      int result = _wremove(minidump_path);
+      if (result < 0)
+        {
+          wprintf(L"failed to delete minidump file '%ls'\n", minidump_path);
+        }
+      else
+        {
+          if (verbose)
+            wprintf(L"minidump file '%ls' deleted\n", minidump_path);
+        }
+    }
+ else
+   {
+     if (verbose)
+       wprintf(L"not deleting minidump file '%ls'\n", minidump_path);
+   }
 
   return (result == google_breakpad::RESULT_SUCCEEDED);
 }

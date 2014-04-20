@@ -45,6 +45,7 @@ private:
   wchar_t dumps_dir[MAX_PATH+1];
   bool verbose;
   bool nokill;
+  bool nodelete;
   std::wstring server_url;
   std::wstring reporter_notes;
 

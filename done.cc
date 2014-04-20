@@ -50,8 +50,8 @@ DonePage::OnActivate(void)
   GetOwner()->SetButtons(PSWIZB_FINISH);
 
   // disable the cancel button
-  // XXX: sysmenu close is still hooked up to cancel
   SendMessage(GetOwner()->GetHWND(), PSM_CANCELTOCLOSE, 0, 0);
+  // XXX: Note that sysmenu close is still hooked up to cancel
 
   // show the results of the operation
   if (!crashreporter->dump_succeeded)
