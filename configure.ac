@@ -23,5 +23,5 @@ esac
 
 CXXFLAGS="-g -O0 -Wall -Wextra $CXXFLAGS"
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile cygwin_crash_reporter.man])
 AC_OUTPUT

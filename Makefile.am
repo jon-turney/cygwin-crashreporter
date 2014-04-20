@@ -24,5 +24,12 @@ res.o: cygwin_crash_reporter_gui.exe.manifest hippo.ico cygwin.ico
 .rc.o:
 	$(AM_V_GEN)$(WINDRES) --include-dir $(srcdir) -o $@ $<
 
+man1_MANS=cygwin_crash_reporter.man cygwin_crash_reporter_cli.1 cygwin_crash_reporter_gui.1
+
+BUILT_SOURCES = cygwin_crash_reporter_cli.1 cygwin_crash_reporter_gui.1
+
+%.1:
+	$(AM_GEN_V)echo .so man1/cygwin_crash_reporter.1 >$@
+
 # must be built as a native Windows application when distchecked
 AM_DISTCHECK_CONFIGURE_FLAGS = "--host=i686-w64-mingw32"
