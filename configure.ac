@@ -1,4 +1,4 @@
-AC_INIT(cygwin-crashreporter, 0.1)
+AC_INIT([cygwin-crashreporter], m4_esyscmd([cat version | tr -d '\n']))
 
 AM_INIT_AUTOMAKE(foreign no-dist-gzip dist-xz -Wall)
 AM_MAINTAINER_MODE([enable])
