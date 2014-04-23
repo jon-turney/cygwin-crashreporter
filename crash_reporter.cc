@@ -45,7 +45,8 @@ CygwinCrashReporter::CygwinCrashReporter()
   if (env_server_url)
     server_url = env_server_url;
 
-  nodelete = (!!_wgetenv(L"CYGWIN_CRASHREPORTER_NO_DELETE_DUMP"));
+  nodelete = (_wgetenv(L"CYGWIN_CRASHREPORTER_NO_DELETE_DUMP") ||
+              _wgetenv(L"CYGWIN_CRASHREPORTER_NO_REPORT"));
 
   overall_succeeded = FALSE;
   dump_succeeded = FALSE;
@@ -185,6 +186,8 @@ CygwinCrashReporter::crash_reporter_callback(const wchar_t* dump_path,
 
   if (_wgetenv(L"CYGWIN_CRASHREPORTER_NO_REPORT"))
     {
+      upload_result = L"disabled";
+
       if (verbose)
         wprintf(L"Crash report uploading is disabled\n");
 

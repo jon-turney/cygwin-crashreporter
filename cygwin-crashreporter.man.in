@@ -53,6 +53,9 @@ GetTempPath().
 .B CYGWIN_CRASHREPORTER_NO_REPORT
 If set, save the minidump file, but don't send the report to the server.
 .PP
+.B CYGWIN_CRASHREPORTER_DISABLE
+If set, disable crash reporting completely.
+.PP
 .SH "SEE ALSO"
 dumper(1), minidumper(1)
 .PP

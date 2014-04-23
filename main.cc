@@ -30,6 +30,9 @@
 extern "C" int
 wmain(int argc, wchar_t **argv)
 {
+  if (_wgetenv(L"CYGWIN_CRASHREPORTER_DISABLE"))
+    return -1;
+
   crashreporter = new CygwinCrashReporter;
   crashreporter->process_command_line(argc, argv);
   crashreporter->do_dump();

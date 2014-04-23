@@ -66,6 +66,9 @@ wWinMain(HINSTANCE hInstance,
          PWSTR pCmdLine __attribute__((unused)),
          int nCmdShow __attribute__((unused)))
 {
+  if (_wgetenv(L"CYGWIN_CRASHREPORTER_DISABLE"))
+    return -1;
+
   // Init window class lib
   Window::SetAppInstance(hInstance);
 
