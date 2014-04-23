@@ -1,26 +1,26 @@
-.TH cygwin-crashreporter 1 @PACKAGE_VERSION@
+.TH cygwin-crashreporter 1 @PACKAGE_VERSION@ "" CYGWIN
 .SH NAME
 cygwin-crashreporter \- A crash reporting tool for cygwin
-
+.PP
 .SH SYNOPSIS
 .B cygwin-crashreporter-cli [OPTIONS] IGNORED_FILENAME WIN32PID
-
+.PP
 .B cygwin-crashreporter-gui [OPTIONS] IGNORED_FILENAME WIN32PID
-
+.PP
 .SH DESCRIPTION
 \fIcygwin-crashreporter\fP is crash reporting tool for Cygwin, which creates a
 minidump of the specified process and uploads it to a reporting server.
-
+.PP
 \fIcygwin-crashreporter\fP can be used with Cygwin's JIT debugging facility in
 exactly the same way as \fIdumper(1)\fP.
-
+.PP
 For compatibility with \fIdumper(1)\fP, a filename argument must be provided
 which is ignored, and the target process is terminated unless the -n option is
 given.
-
+.PP
 .SH OPTIONS
 \fIcygwin-crashreporter\fP accepts the following optional command line switches:
-
+.PP
 .TP 8
 .B \-d
 Output verbose debugging information.
@@ -39,24 +39,27 @@ Set the upload server URL.
 .TP 8
 .B \-V
 Display the version number and exit.
-
+.PP
 .SH "ENVIRONMENT VARIABLES"
 .B CYGWIN_CRASHREPORTER_URL
 Sets the URL that the crash reporter will submit reports to.
+.PP
 .B CYGWIN_CRASHREPORTER_NO_DELETE_DUMP
-Don't delete the crash report dump file after submitting it to the
-server. Minidumps are placed in a subdirectory of the directory returned
-by GetTempPath().
+If set, don't delete the crash report dump file after submitting it to the
+server.
+Minidumps are placed in a subdirectory of the directory returned by
+GetTempPath().
+.PP
 .B CYGWIN_CRASHREPORTER_NO_REPORT
-Save the minidump file but don't send the report to the server.
-
+If set, save the minidump file, but don't send the report to the server.
+.PP
 .SH "SEE ALSO"
 dumper(1), minidumper(1)
-
+.PP
 .SH BUGS
 Yes.
-
+.PP
 .SH AUTHORS
-cygwin-crashreporter was written by Jon Turney.  It is a simple wrapper around
-the breakpad library which does the actual work of creating a minidump and
-uploading it to a crash reporting server.
+cygwin-crashreporter was written by Jon Turney.
+It is a simple wrapper around the breakpad library which does the actual work of
+creating a minidump and uploading it to a crash reporting server.
