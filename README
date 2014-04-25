@@ -1,0 +1,12 @@
+cygwin-crashreporter
+
+A simple breakpad crashreporter for Cygwin.
+
+By design, this is not a Cygwin application
+
+This can be invoked using Cygwin's error_start JIT facility, or from a SIGSEGV
+handler to upload minidumps.
+
+This isn't quite ideal as we don't capture the EXCEPTION_POINTERS exception
+record into the minidump, but to do that will require some change to the cygwin
+DLL.

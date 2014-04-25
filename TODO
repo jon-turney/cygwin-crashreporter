@@ -1,0 +1,10 @@
+check for unused stuff in propsheet 'framework'
+audit for error handling
+
+Upload logfiles as well (requires a breakpad change to CrashReportSender::SendCrashReport to take a vector of files)
+
+CrashReportSender::SendCrashReport() doesn't take a timeout parameter: is the system default (which appears to be ~30s?)
+usable? or will this cause most uploads to timeout?  If the dmp files we generate are typically 400K, to upload in 30s
+requires ~100Kbps, somewhat faster than modem speeds...
+
+Should file be removed on upload fail?
