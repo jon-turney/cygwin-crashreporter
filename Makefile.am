@@ -14,8 +14,8 @@ cygwin_crashreporter_gui_SOURCES = winmain.cc window.cc window.h proppage.cc \
 				  cygwin-crashreporter-gui.exe.manifest \
 				  cygwin.ico hippo.ico
 
-cygwin_crashreporter_cli_LDADD = libcrash_reporter.a -lbreakpad_client -lwininet
-cygwin_crashreporter_gui_LDADD = libcrash_reporter.a -lbreakpad_client -lwininet -lgdi32 -lcomctl32
+cygwin_crashreporter_cli_LDADD = libcrash_reporter.a
+cygwin_crashreporter_gui_LDADD = libcrash_reporter.a -lgdi32 -lcomctl32
 cygwin_crashreporter_gui_LDFLAGS = $(AM_LDFLAGS) -mwindows
 
 # files included in res.rc
