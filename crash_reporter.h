@@ -30,6 +30,7 @@ public:
   int process_command_line(int argc, wchar_t **argv);
   void do_dump(void);
   void set_notes(const wchar_t *notes);
+  void kill_process(void);
 
   // result state -- XXX: should be private!
   bool overall_succeeded;

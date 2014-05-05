@@ -290,12 +290,12 @@ CygwinCrashReporter::do_dump(void)
   if (create_temp_dir())
     return;
 
-  HANDLE process = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_TERMINATE,
+  HANDLE process = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ,
                                 FALSE,
                                 pid);
   if (process == NULL)
     {
-      wprintf(L"Error opening process %d\n", pid);
+      wprintf(L"Error opening process for dumping%d\n", pid);
       return;
     }
 
@@ -307,14 +307,29 @@ CygwinCrashReporter::do_dump(void)
      this // callback context
      );
 
-  /* Unless nokill is given, behave like dumper and terminate the dumped process */
-  if (!nokill)
-    {
-      TerminateProcess(process, 128 + 9);
-      WaitForSingleObject(process, INFINITE);
-    }
-
   CloseHandle(process);
 
   fflush(stdout);
+}
+
+void
+CygwinCrashReporter::kill_process(void)
+{
+  /* Unless nokill is given, behave like dumper and terminate the dumped process */
+  if (nokill)
+    {
+      return;
+    }
+
+  HANDLE process = OpenProcess(PROCESS_TERMINATE, FALSE, pid);
+  if (process == NULL)
+    {
+      wprintf(L"Error opening process for termination%d\n", pid);
+      return;
+    }
+
+  TerminateProcess(process, 128 + 9);
+  WaitForSingleObject(process, INFINITE);
+
+  CloseHandle(process);
 }

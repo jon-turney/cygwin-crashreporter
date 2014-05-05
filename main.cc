@@ -58,5 +58,7 @@ wmain(int argc, wchar_t **argv)
         }
     }
 
+  crashreporter->kill_process();
+
   return crashreporter->overall_succeeded ? 0 : -1;
 }

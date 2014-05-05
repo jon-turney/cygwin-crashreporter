@@ -78,7 +78,22 @@ wWinMain(HINSTANCE hInstance,
   crashreporter = new CygwinCrashReporter;
   crashreporter->process_command_line(argc, argv);
 
-  main_display();
+  // It doesn't make much sense to put up our GUI if we can't receive user
+  // input, which can happen if the crashed program was run from a service.
+  HDESK hDesk = OpenInputDesktop(DF_ALLOWOTHERACCOUNTHOOK, FALSE, GENERIC_WRITE);
+  if (hDesk)
+    {
+      main_display();
+
+      CloseDesktop(hDesk);
+    }
+  else
+    {
+      wprintf(L"No access to interactive desktop\n");
+    }
+
+  // Unless nokill is given, behave like dumper and terminate the dumped process
+  crashreporter->kill_process();
 
   return crashreporter->overall_succeeded ? 0 : -1;
 }
