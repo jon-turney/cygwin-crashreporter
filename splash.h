@@ -36,6 +36,10 @@ public:
   };
 
   bool Create();
+  virtual void OnActivate(void);
+
+ private:
+  void SetControlText(int nIDDlgItem, const std::wstring &s);
 };
 
 #endif /* SPLASH_H */

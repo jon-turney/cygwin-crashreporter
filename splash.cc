@@ -24,6 +24,9 @@
 
 #include "resource.h"
 #include "splash.h"
+#include "crash_reporter.h"
+
+#include "sstream"
 
 static HFONT hBoldFont;
 
@@ -82,4 +85,22 @@ bool
 SplashPage::Create()
 {
   return PropertyPage::Create(dlgproc, IDD_SPLASH);
+}
+
+void
+SplashPage::SetControlText(int nIDDlgItem, const std::wstring &s)
+{
+  ::SetWindowTextW(GetDlgItem(nIDDlgItem), s.c_str());
+}
+
+void
+SplashPage::OnActivate()
+{
+  std::wstringstream format;
+  format << L"The crashed process is ";
+  if (!crashreporter->process_name.empty())
+    format << crashreporter->process_name << ", ";
+  format << L"winpid " << crashreporter->pid << L".";
+
+  SetControlText(IDC_PROCESS_INFO, format.str().c_str());
 }

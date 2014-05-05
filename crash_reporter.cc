@@ -25,6 +25,9 @@
 #include <breakpad/client/windows/handler/exception_handler.h>
 #include <breakpad/client/windows/sender/crash_report_sender.h>
 
+#define PSAPI_VERSION 1
+#include "psapi.h"
+
 #define DIRECTORY L"\\dumps"
 #define SERVER_URL L"http://crashreportserver/addreport.php"
 #define CHECKPOINT_FILE L"crash_checkpoint.dat"
@@ -330,6 +333,32 @@ CygwinCrashReporter::kill_process(void)
 
   TerminateProcess(process, 128 + 9);
   WaitForSingleObject(process, INFINITE);
+
+  CloseHandle(process);
+}
+
+void
+CygwinCrashReporter::get_process_info(void)
+{
+  HANDLE process = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ,
+                                FALSE,
+                                pid);
+  if (process == NULL)
+    {
+      wprintf(L"Error opening process for info%d\n", pid);
+      return;
+    }
+
+  wchar_t buffer[MAX_PATH+1];
+  GetProcessImageFileNameW(process, buffer, MAX_PATH);
+  buffer[MAX_PATH] = 0;
+
+  if (verbose)
+    wprintf(L"crashed process is %ls, winpid %d\n", buffer, pid);
+
+  wchar_t *last = wcsrchr(buffer, '\\');
+  if (last)
+    process_name = last+1;
 
   CloseHandle(process);
 }

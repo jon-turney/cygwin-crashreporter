@@ -35,6 +35,7 @@ wmain(int argc, wchar_t **argv)
 
   crashreporter = new CygwinCrashReporter;
   crashreporter->process_command_line(argc, argv);
+  crashreporter->get_process_info();
   crashreporter->do_dump();
 
   if (!crashreporter->dump_succeeded)

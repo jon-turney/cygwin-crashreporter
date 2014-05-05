@@ -28,9 +28,14 @@ class CygwinCrashReporter
 public:
   CygwinCrashReporter();
   int process_command_line(int argc, wchar_t **argv);
+  void get_process_info(void);
   void do_dump(void);
   void set_notes(const wchar_t *notes);
   void kill_process(void);
+
+  // info state
+  DWORD pid;
+  std::wstring process_name;
 
   // result state -- XXX: should be private!
   bool overall_succeeded;
@@ -42,7 +47,6 @@ public:
 
 private:
   // input state
-  DWORD pid;
   wchar_t dumps_dir[MAX_PATH+1];
   bool verbose;
   bool nokill;

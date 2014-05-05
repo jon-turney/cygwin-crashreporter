@@ -77,6 +77,7 @@ wWinMain(HINSTANCE hInstance,
 
   crashreporter = new CygwinCrashReporter;
   crashreporter->process_command_line(argc, argv);
+  crashreporter->get_process_info();
 
   // It doesn't make much sense to put up our GUI if we can't receive user
   // input, which can happen if the crashed program was run from a service.

@@ -23,3 +23,4 @@
 #define IDC_UPLOAD_REPORT_CODE            503
 #define IDC_PROGRESS_ANIMATION            504
 #define IDC_BOLD                          505
+#define IDC_PROCESS_INFO                  506
