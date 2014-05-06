@@ -146,8 +146,18 @@ CygwinCrashReporter::process_command_line(int argc, wchar_t **argv)
 int
 CygwinCrashReporter::create_temp_dir(void)
 {
-  if (!GetTempPathW(MAX_PATH, dumps_dir))
+  // in the very limited environment a Win32 process inherits from a Cygwin
+  // process, GetTempPath() may not return anything useful, so try harder to
+  // find a useful path.
+
+  const wchar_t *systemdrive = _wgetenv(L"SYSTEMDRIVE");
+  if (systemdrive)
+    wcscpy(dumps_dir, systemdrive);
+  else
     wcscpy(dumps_dir, L"C:");
+
+  if (_wgetenv(L"TMP") || _wgetenv(L"TEMP") || _wgetenv(L"USERPROFILE"))
+      GetTempPathW(MAX_PATH, dumps_dir);
 
   if (dumps_dir[wcslen(dumps_dir)-1] == L'\\')
     dumps_dir[wcslen(dumps_dir)-1] = 0;
@@ -157,7 +167,9 @@ CygwinCrashReporter::create_temp_dir(void)
 
   if (_wmkdir(dumps_dir) && (errno != EEXIST)) {
     wprintf(L"Unable to create temporary directory '%s' for writing minidump\n", dumps_dir);
-    return -1;
+
+    // fall back to the working directory
+    dumps_dir[0] = 0;
   }
 
   return 0;

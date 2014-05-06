@@ -45,16 +45,26 @@ Display the version number and exit.
 Sets the URL that the crash reporter will submit reports to.
 .PP
 .B CYGWIN_CRASHREPORTER_NO_DELETE_DUMP
-If set, don't delete the crash report dump file after submitting it to the
-server.
-Minidumps are placed in a subdirectory of the directory returned by
-GetTempPath().
+If set, don't delete the minidump file after submitting it to the server.
 .PP
 .B CYGWIN_CRASHREPORTER_NO_REPORT
 If set, save the minidump file, but don't send the report to the server.
 .PP
 .B CYGWIN_CRASHREPORTER_DISABLE
 If set, disable crash reporting completely.
+.PP
+.SH "FILES"
+Minidump files are written to a 'dumps' subdirectory of the first of the
+following which is writeable:
+.PP
+The directory returned by GetTempPath()
+.br
+$SYSTEMDRIVE
+.br
+C:\\
+.br
+The current working directory
+.br
 .PP
 .SH "SEE ALSO"
 dumper(1), minidumper(1)
