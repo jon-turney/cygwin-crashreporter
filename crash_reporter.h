@@ -51,6 +51,7 @@ private:
   bool verbose;
   bool nokill;
   bool nodelete;
+  bool noreport;
   std::wstring server_url;
   std::wstring reporter_notes;
 

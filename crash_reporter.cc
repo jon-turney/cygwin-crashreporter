@@ -43,6 +43,7 @@ CygwinCrashReporter::CygwinCrashReporter()
   nokill = FALSE;
   server_url = SERVER_URL;
   nodelete = FALSE;
+  noreport = FALSE;
 
   const wchar_t *env_server_url = _wgetenv(L"CYGWIN_CRASHREPORTER_URL");
   if (env_server_url)
@@ -50,6 +51,8 @@ CygwinCrashReporter::CygwinCrashReporter()
 
   nodelete = (_wgetenv(L"CYGWIN_CRASHREPORTER_NO_DELETE_DUMP") ||
               _wgetenv(L"CYGWIN_CRASHREPORTER_NO_REPORT"));
+
+  noreport = _wgetenv(L"CYGWIN_CRASHREPORTER_NO_REPORT");
 
   overall_succeeded = FALSE;
   dump_succeeded = FALSE;
@@ -71,8 +74,10 @@ Write and upload minidump from WIN32PID\n\
 \n\
  -d, --verbose  be verbose\n\
  -h, --help     output help information and exit\n\
+ -k, --keep     don't remove the minidump after uploading\n\
  -n, --nokill   don't terminate the dumped process\n\
  -q, --quiet    be quiet while dumping (default)\n\
+ -r, --dry-run  don't upload the dump file\n\
  -s, --server   set upload server URL\n\
  -V, --version  output version information and exit\n\
 \n", buffer);
@@ -117,6 +122,12 @@ CygwinCrashReporter::process_command_line(int argc, wchar_t **argv)
             }
           else
             usage(stderr, 1);
+          break;
+        case L'k':
+          nodelete = TRUE;
+          break;
+        case L'r':
+          noreport = TRUE;
           break;
         case L'h':
           usage(stdout, 0);
@@ -199,7 +210,7 @@ CygwinCrashReporter::crash_reporter_callback(const wchar_t* dump_path,
       return FALSE;
     }
 
-  if (_wgetenv(L"CYGWIN_CRASHREPORTER_NO_REPORT"))
+  if (noreport)
     {
       upload_result = L"disabled";
 

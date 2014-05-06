@@ -28,11 +28,17 @@ Output verbose debugging information.
 .B \-h
 List these options and exit.
 .TP 8
+.B \-k
+Don't remove the minidump file after uploading.
+.TP 8
 .B \-n
 Do not kill the process.
 .TP 8
 .B \-q
 Be quiet while dumping.
+.TP 8
+.B \-r
+Don't upload the minidump.
 .TP 8
 .B \-s
 Set the upload server URL.
