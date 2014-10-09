@@ -73,6 +73,7 @@ Usage: %ls [OPTION] IGNORED_FILENAME WIN32PID\n\
 Write and upload minidump from WIN32PID\n\
 \n\
  -d, --verbose  be verbose\n\
+ -f, --file     additional file to upload\n\
  -h, --help     output help information and exit\n\
  -k, --keep     don't remove the minidump after uploading\n\
  -n, --nokill   don't terminate the dumped process\n\
@@ -105,6 +106,15 @@ CygwinCrashReporter::process_command_line(int argc, wchar_t **argv)
 
       switch (argv[i][1])
         {
+        case L'f':
+          if (argc > i)
+            {
+              i++;
+              extra_files.push_back(argv[i]);
+            }
+          else
+            usage(stderr, 1);
+          break;
         case L'n':
           nokill = TRUE;
           break;
@@ -238,9 +248,28 @@ CygwinCrashReporter::crash_reporter_callback(const wchar_t* dump_path,
   if (!reporter_notes.empty())
     parameters[L"Notes"] = reporter_notes;
 
+  std::map<std::wstring,std::wstring> files;
+
+  files[L"upload_file_minidump"] = minidump_path;
+  if (!extra_files.empty())
+    {
+      for (std::vector<std::wstring>::iterator i = extra_files.begin();
+           i != extra_files.end();
+           i++)
+        {
+          files[*i] = *i;
+          if (verbose)
+            wprintf(L"file is '%ls'\n", i->c_str());
+        }
+    }
+  else if (_wgetenv(L"LOGFILE"))
+    {
+      files[L"logfile"] = _wgetenv(L"LOGFILE");
+    }
+
   google_breakpad::CrashReportSender *pSender = new google_breakpad::CrashReportSender(checkpoint_file);
   pSender->set_max_reports_per_day(10);
-  google_breakpad::ReportResult result = pSender->SendCrashReport(server_url, parameters, minidump_path, &upload_report_code);
+  google_breakpad::ReportResult result = pSender->SendCrashReport(server_url, parameters, files, &upload_report_code);
 
   if (verbose)
     wprintf(L"crash report upload result %d, report code '%ls'\n", result, upload_report_code.c_str());

@@ -25,6 +25,9 @@ given.
 .B \-d
 Output verbose debugging information.
 .TP 8
+.B \-f
+Windows-style pathname of an additional file to upload
+.TP 8
 .B \-h
 List these options and exit.
 .TP 8

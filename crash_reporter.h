@@ -20,6 +20,7 @@
 */
 
 #include <string>
+#include <vector>
 #include <stdio.h>
 #include <windows.h>
 
@@ -54,6 +55,7 @@ private:
   bool noreport;
   std::wstring server_url;
   std::wstring reporter_notes;
+  std::vector<std::wstring> extra_files;
 
   // implementation helpers
   void usage(FILE *stream, int status);
