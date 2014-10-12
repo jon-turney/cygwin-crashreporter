@@ -25,6 +25,9 @@
 #include <breakpad/client/windows/handler/exception_handler.h>
 #include <breakpad/client/windows/sender/crash_report_sender.h>
 
+#include <sstream>
+#include <time.h>
+
 #define PSAPI_VERSION 1
 #include "psapi.h"
 
@@ -244,6 +247,10 @@ CygwinCrashReporter::crash_reporter_callback(const wchar_t* dump_path,
 
   parameters[L"Uploader"] = L"" PACKAGE_NAME "/" PACKAGE_VERSION;
   parameters[L"MinidumpID"] = minidump_id;
+
+  std::wstringstream s;
+  s << time(NULL);
+  parameters[L"CrashTime"] = s.str();
 
   if (!reporter_notes.empty())
     parameters[L"Notes"] = reporter_notes;
