@@ -386,7 +386,7 @@ CygwinCrashReporter::kill_process(void)
   HANDLE process = OpenProcess(PROCESS_TERMINATE, FALSE, pid);
   if (process == NULL)
     {
-      wprintf(L"Error opening process for termination%d\n", pid);
+      wprintf(L"Error opening process for termination %d\n", pid);
       return;
     }
 
@@ -404,7 +404,7 @@ CygwinCrashReporter::get_process_info(void)
                                 pid);
   if (process == NULL)
     {
-      wprintf(L"Error opening process for info%d\n", pid);
+      wprintf(L"Error opening process for info %d\n", pid);
       return;
     }
 
