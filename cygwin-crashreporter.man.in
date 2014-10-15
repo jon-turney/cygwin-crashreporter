@@ -68,7 +68,7 @@ following which is writeable:
 .PP
 The directory returned by GetTempPath()
 .br
-$SYSTEMDRIVE
+The root directory of the drive in the environment variable SYSTEMDRIVE
 .br
 C:\\
 .br
