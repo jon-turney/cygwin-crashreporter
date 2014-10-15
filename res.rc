@@ -37,7 +37,7 @@ BEGIN
     LTEXT           "Note: crash reports are public."
                     "\r\n\r\n",
                     IDC_BOLD, 115, 33, STANDARD_DIALOG_W - 115, 16
-    LTEXT           "If you were working with personal or confidental information when the crash occured, "
+    LTEXT           "If you were working with personal or confidential information when the crash occurred, "
                     "you should not submit a crash report."
                     "\r\n\r\n"
                     "Otherwise, please help to improve Cygwin by submitting a crash report."
@@ -57,7 +57,7 @@ FONT 8, "MS Shell Dlg"
 BEGIN
     ICON            IDI_CYGWIN, IDC_STATIC, STANDARD_HEADICON_X, 0, 21, 20
     LTEXT           "Add notes", IDC_STATIC, 7, 0, 258, 8, NOT WS_GROUP
-    LTEXT           "You can describe what you were doing when the crash occured, "
+    LTEXT           "You can describe what you were doing when the crash occurred, "
                     "or how to reproduce it."
                     "",
                     IDC_STATIC, 21, 9, 239, 16, NOT WS_GROUP
