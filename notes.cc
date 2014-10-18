@@ -45,6 +45,7 @@ NotesPage::OnDeactivate()
   int length = GetWindowTextLengthW(hwnd);
   if (length > 0)
     {
+      length++;
       wchar_t *buf = new wchar_t[length + 1];
 
       if (buf)
