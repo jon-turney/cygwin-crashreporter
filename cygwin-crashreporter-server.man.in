@@ -1,0 +1,45 @@
+.TH cygwin-crashreporter-server 1 @PACKAGE_VERSION@ "" CYGWIN
+.SH NAME
+cygwin-crashreporter-server \- A crash generation server for cygwin
+.PP
+.SH SYNOPSIS
+.B cygwin-crashreporter-server
+.PP
+.SH DESCRIPTION
+\fIcygwin-crashreporter-server\fP is a crash generation server, which will
+receive requests to write a minidump from other processes, and presents a
+reporting wizard GUI to inform the user of progress as it uses breakpad to write
+a minidump and upload it to a crash report server.
+.PP
+\fIcygwin-crashreporter-server\fP is started automatically when needed.
+.PP
+.SH "ENVIRONMENT VARIABLES"
+.B CYGWIN_CRASHREPORTER_NO_DELETE_DUMP
+If set, don't delete the minidump file after submitting it to the server.
+.PP
+.B CYGWIN_CRASHREPORTER_NO_REPORT
+If set, save the minidump file, but don't send the report to the server.
+.PP
+.SH "FILES"
+Minidump files are written to a 'dumps' subdirectory of the first of the
+following which is writeable:
+.PP
+The directory returned by GetTempPath()
+.br
+The root directory of the drive in the environment variable SYSTEMDRIVE
+.br
+C:\\
+.br
+The current working directory
+.br
+.PP
+.SH "SEE ALSO"
+minidumper(1), cygwin-crashreporter-gui(1), cygwin-crashreporter-gui(2)
+.PP
+.SH BUGS
+Yes.
+.PP
+.SH AUTHORS
+cygwin-crashreporter-server was written by Jon Turney.
+It is a simple wrapper around the breakpad library which does the actual work of
+creating a minidump and uploading it to a crash reporting server.

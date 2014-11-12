@@ -26,5 +26,5 @@ CXXFLAGS="-Wall -Wextra -D_FORTIFY_SOURCE=2 $CXXFLAGS"
 AC_CHECK_LIB([wininet], [main], [], AC_MSG_ERROR([libwininet is required]))
 AC_CHECK_LIB([breakpad_client], [main], [], AC_MSG_ERROR([libbreakpad_client is required]))
 
-AC_CONFIG_FILES([Makefile cygwin-crashreporter.man])
+AC_CONFIG_FILES([Makefile cygwin-crashreporter.man cygwin-crashreporter-server.man])
 AC_OUTPUT
