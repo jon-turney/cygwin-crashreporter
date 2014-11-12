@@ -1,5 +1,6 @@
 bin_PROGRAMS = cygwin-crashreporter-cli cygwin-crashreporter-gui cygwin-crashreporter-server
 noinst_LIBRARIES = libcrash_reporter.a libwizard.a
+noinst_PROGRAMS = test
 
 AM_LDFLAGS = -static-libgcc -static-libstdc++ -municode
 
@@ -14,6 +15,8 @@ libwizard_a_SOURCES = window.cc window.h proppage.cc \
 cygwin_crashreporter_cli_SOURCES = main.cc
 cygwin_crashreporter_gui_SOURCES = winmain.cc
 cygwin_crashreporter_server_SOURCES = server.cc server.h
+
+test_SOURCES = test.cc
 
 cygwin_crashreporter_cli_LDADD = libcrash_reporter.a -lpsapi
 cygwin_crashreporter_gui_LDADD = res.o libcrash_reporter.a libwizard.a -lgdi32 -lcomctl32 -lpsapi
