@@ -29,7 +29,7 @@ man1_MANS=cygwin-crashreporter.man cygwin-crashreporter-cli.1 cygwin-crashreport
 BUILT_SOURCES = cygwin-crashreporter-cli.1 cygwin-crashreporter-gui.1
 
 %.1:
-	$(AM_GEN_V)echo .so man1/cygwin-crashreporter.1 >$@
+	$(AM_V_GEN)echo .so man1/cygwin-crashreporter.1 >$@
 
 CLEANFILES = $(BUILT_SOURCES)
 
