@@ -22,14 +22,13 @@
 #include <shellapi.h>
 #include "resource.h"
 
-bool PropertyPage::DoOnceForSheet = true;
-
 PropertyPage::PropertyPage ()
 {
   proc = NULL;
   cmdproc = NULL;
   IsFirst = false;
   IsLast = false;
+  DoOnce = true;
 }
 
 PropertyPage::~PropertyPage ()
@@ -126,13 +125,12 @@ PropertyPage::DialogProc (UINT message, WPARAM wParam, LPARAM lParam)
             }
           case PSN_SETACTIVE:
             {
-              if (DoOnceForSheet)
+              if (DoOnce)
               {
                 // Tell our parent PropSheet what its own HWND is.
                 GetOwner ()->SetHWNDFromPage (((NMHDR FAR *) lParam)->
                                               hwndFrom);
-                //                GetOwner ()->CenterWindow ();
-                DoOnceForSheet = false;
+                DoOnce = false;
               }
 
               // Set the wizard buttons appropriately

@@ -28,7 +28,7 @@ class PropSheet;
 
 class PropertyPage: public Window
 {
-  static bool DoOnceForSheet;
+  bool DoOnce;
   PROPSHEETPAGE psp;
   DLGPROC proc;
     BOOL (*cmdproc) (HWND h, int id, HWND hwndctl, UINT code);
