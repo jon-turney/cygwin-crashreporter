@@ -1,25 +1,25 @@
 bin_PROGRAMS = cygwin-crashreporter-cli cygwin-crashreporter-gui
-noinst_LIBRARIES = libcrash_reporter.a
+noinst_LIBRARIES = libcrash_reporter.a libwizard.a
 
 AM_LDFLAGS = -static-libgcc -static-libstdc++ -municode
 
 libcrash_reporter_a_SOURCES = crash_reporter.cc crash_reporter.h
 
-cygwin_crashreporter_cli_SOURCES = main.cc
+libwizard_a_SOURCES = window.cc window.h proppage.cc \
+		      proppage.h propsheet.cc propsheet.h splash.cc\
+		      splash.h notes.cc notes.h progress.cc \
+		      progress.h done.cc done.h wizard.cc wizard.h \
+		      res.rc resource.h manifest.xml hippo.ico cygwin.ico
 
-cygwin_crashreporter_gui_SOURCES = winmain.cc window.cc window.h proppage.cc \
-				  proppage.h propsheet.cc propsheet.h splash.cc\
-				  splash.h notes.cc notes.h progress.cc \
-				  progress.h done.cc done.h res.rc resource.h \
-				  cygwin-crashreporter-gui.exe.manifest \
-				  cygwin.ico hippo.ico
+cygwin_crashreporter_cli_SOURCES = main.cc
+cygwin_crashreporter_gui_SOURCES = winmain.cc
 
 cygwin_crashreporter_cli_LDADD = libcrash_reporter.a -lpsapi
-cygwin_crashreporter_gui_LDADD = libcrash_reporter.a -lgdi32 -lcomctl32 -lpsapi
+cygwin_crashreporter_gui_LDADD = res.o libcrash_reporter.a libwizard.a -lgdi32 -lcomctl32 -lpsapi
 cygwin_crashreporter_gui_LDFLAGS = $(AM_LDFLAGS) -mwindows
 
 # files included in res.rc
-res.o: cygwin-crashreporter-gui.exe.manifest hippo.ico cygwin.ico
+res.o: res.rc resource.h manifest.xml hippo.ico cygwin.ico
 
 .rc.o:
 	$(AM_V_GEN)$(WINDRES) -o $@ $< --include-dir $(srcdir) -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\" --use-temp-file

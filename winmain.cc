@@ -26,39 +26,9 @@
 // write a minidump and upload it to a crash report server.
 //
 
-#include "splash.h"
-#include "notes.h"
-#include "progress.h"
-#include "done.h"
-
-#include "propsheet.h"
+#include "window.h"
+#include "wizard.h"
 #include "crash_reporter.h"
-
-static void
-main_display(void)
-{
-  SplashPage Splash;
-  NotesPage Notes;
-  ProgressPage Progress;
-  DonePage Done;
-
-  PropSheet MainWindow;
-
-  // Create pages
-  Splash.Create();
-  Notes.Create();
-  Progress.Create();
-  Done.Create();
-
-  // Add pages to sheet
-  MainWindow.AddPage(&Splash);
-  MainWindow.AddPage(&Notes);
-  MainWindow.AddPage(&Progress);
-  MainWindow.AddPage(&Done);
-
-  // Create and run the PropSheet main window
-  MainWindow.Create();
-}
 
 int WINAPI
 wWinMain(HINSTANCE hInstance,

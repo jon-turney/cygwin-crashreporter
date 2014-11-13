@@ -98,7 +98,7 @@ END
 // Manifest
 //
 
-CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "cygwin-crashreporter-gui.exe.manifest"
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "manifest.xml"
 
 /////////////////////////////////////////////////////////////////////////////
 //
