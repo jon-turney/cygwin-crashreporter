@@ -216,6 +216,12 @@ CygwinCrashReporter::set_notes(const wchar_t *notes)
   reporter_notes = notes;
 }
 
+void
+CygwinCrashReporter::set_verbose(bool b)
+{
+  verbose = b;
+}
+
 bool
 CygwinCrashReporter::crash_reporter_callback(const wchar_t* dump_path,
                                              const wchar_t* minidump_id,

@@ -57,6 +57,7 @@ static void clientCrashed(void* context __attribute__((unused)),
 
   crashreporter = new CygwinCrashReporter;
   crashreporter->pid = client_info->pid();
+  crashreporter->set_verbose(TRUE); // XXX: debug
   crashreporter->get_process_info();
 
   main_display();

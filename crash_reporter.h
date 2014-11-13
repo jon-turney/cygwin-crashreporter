@@ -32,6 +32,7 @@ public:
   void get_process_info(void);
   void do_dump(void);
   void set_notes(const wchar_t *notes);
+  void set_verbose(bool b);
   void kill_process(void);
   static std::wstring get_dumps_dir(void);
 
