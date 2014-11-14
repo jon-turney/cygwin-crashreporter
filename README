@@ -15,6 +15,10 @@ Invoking the crashreporter like that isn't quite ideal as we don't capture the
 EXCEPTION_POINTERS exception record into the minidump, so the minidump doesn't
 record exactly which thread crashed, and with what exception.
 
-This shortcomings could possibly be addressed with some changes to the Cygwin
-DLL to give it a better way of invoking the crashreporter, passing that
-information, but that's not happening today...
+Addressing these shortcomings requires a change in the Cygwin DLL to give it a
+better way of invoking the crashreporter, passing that information.
+
+The cygwin-crashreporter-hooks DLL is designed to be optionally dynamically
+loaded by a cygwin application (or perhaps one day, the cygwin DLL), and
+contains functions to be invoked at process creation (to ensure a crash
+generation server is running), and at exception time (to request a crashdump)

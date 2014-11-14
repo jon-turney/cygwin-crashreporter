@@ -24,6 +24,29 @@ cygwin_crashreporter_gui_LDFLAGS = $(AM_LDFLAGS) -mwindows
 cygwin_crashreporter_server_LDADD = res.o libcrash_reporter.a libwizard.a -lgdi32 -lcomctl32 -lpsapi
 cygwin_crashreporter_server_LDFLAGS = $(AM_LDFLAGS) -mwindows
 
+# cygwin-crashreporter-hooks.dll needs to be statically linked to all non-system
+# libraries, which is difficult to request with libtool (since it adds
+# -nostdlib, which prevents --static-libgcc -static-libstc++ from having any
+# effect), so jump through some hoops to build it explicitly
+dll_execdir = $(bindir)
+dll_exec_DATA = cygwin-crashreporter-hooks.dll
+
+cygwin_crashreporter_hooks_LINK = \
+	$(CXXLD) \
+	$(AM_CXXFLAGS) $(CXXFLAGS) \
+	-Wl,--enable-auto-image-base \
+	-Wl,--out-implib=$@.a \
+	-shared $(AM_LDFLAGS) $(LDFLAGS) -o $@
+
+cygwin_crashreporter_hooks_OBJECTS = hooks.o
+
+cygwin-crashreporter-hooks.dll: $(cygwin_crashreporter_hooks_OBJECTS)
+	$(AM_V_CXXLD)$(cygwin_crashreporter_hooks_LINK) $(cygwin_crashreporter_hooks_OBJECTS) $(LIBS)
+
+EXTRA_DIST = hooks.cc
+
+CLEANFILES = cygwin-crashreporter-hooks.dll cygwin-crashreporter-hooks.dll.a
+
 # files included in res.rc
 res.o: res.rc resource.h manifest.xml hippo.ico cygwin.ico
 
@@ -37,9 +60,9 @@ BUILT_SOURCES = cygwin-crashreporter-cli.1 cygwin-crashreporter-gui.1
 cygwin-crashreporter-cli.1 cygwin-crashreporter-gui.1:
 	$(AM_V_GEN)echo .so man1/cygwin-crashreporter.1 >$@
 
-CLEANFILES = $(BUILT_SOURCES)
+CLEANFILES += $(BUILT_SOURCES)
 
 # must be built as a native Windows application when distchecked
 AM_DISTCHECK_CONFIGURE_FLAGS = "--host=i686-w64-mingw32"
 
-EXTRA_DIST = update-version version
+EXTRA_DIST += update-version version
