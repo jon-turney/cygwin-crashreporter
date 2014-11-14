@@ -1,10 +1,19 @@
 check for unused stuff in propsheet 'framework'
 audit for error handling
 
-Upload logfiles as well (requires a breakpad change to CrashReportSender::SendCrashReport to take a vector of files)
-
 CrashReportSender::SendCrashReport() doesn't take a timeout parameter: is the system default (which appears to be ~30s?)
 usable? or will this cause most uploads to timeout?  If the dmp files we generate are typically 400K, to upload in 30s
 requires ~100Kbps, somewhat faster than modem speeds...
 
 Should file be removed on upload fail?
+
+crash-generation-server:
+Need some way to customize the minidump type used
+Server should be per-desktop?
+Hangs around until WM_ENDSESSION.  Maybe we should arrange to terminate it when last cygwin process terminates?
+
+CrashGenerationClient::kWaitForServerTimeoutMs is 15s, the client's timeout for
+the server to process a dump request.  At the moment we assume that has been
+disabled to allow for the GUI process to ask the user if we want to dump or not.
+Perhaps things need to be rearranged so we always dump, then ask the user if
+they want to upload?
