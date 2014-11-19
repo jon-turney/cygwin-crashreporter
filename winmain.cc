@@ -46,6 +46,7 @@ wWinMain(HINSTANCE hInstance,
   LPWSTR *argv = CommandLineToArgvW(GetCommandLineW(), &argc);
 
   crashreporter = new CygwinCrashReporter;
+  crashreporter->process_environment();
   crashreporter->process_command_line(argc, argv);
   crashreporter->get_process_info();
 

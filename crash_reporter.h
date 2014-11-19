@@ -28,6 +28,7 @@ class CygwinCrashReporter
 {
 public:
   CygwinCrashReporter();
+  void process_environment(void);
   int process_command_line(int argc, wchar_t **argv);
   void get_process_info(void);
   void do_dump(void);

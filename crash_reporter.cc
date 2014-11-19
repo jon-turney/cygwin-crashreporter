@@ -52,6 +52,15 @@ CygwinCrashReporter::CygwinCrashReporter()
   if (dumps_dir[0] == '\0')
     create_dumps_dir();
 
+  overall_succeeded = FALSE;
+  dump_succeeded = FALSE;
+  upload_succeeded = FALSE;
+  upload_result = google_breakpad::RESULT_FAILED;
+}
+
+void
+CygwinCrashReporter::process_environment(void)
+{
   const wchar_t *env_server_url = _wgetenv(L"CYGWIN_CRASHREPORTER_URL");
   if (env_server_url)
     server_url = env_server_url;
@@ -60,11 +69,6 @@ CygwinCrashReporter::CygwinCrashReporter()
               _wgetenv(L"CYGWIN_CRASHREPORTER_NO_REPORT"));
 
   noreport = _wgetenv(L"CYGWIN_CRASHREPORTER_NO_REPORT");
-
-  overall_succeeded = FALSE;
-  dump_succeeded = FALSE;
-  upload_succeeded = FALSE;
-  upload_result = google_breakpad::RESULT_FAILED;
 }
 
 void
