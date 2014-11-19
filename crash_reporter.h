@@ -24,12 +24,18 @@
 #include <stdio.h>
 #include <windows.h>
 
+namespace google_breakpad
+{
+  class ClientInfo;
+}
+
 class CygwinCrashReporter
 {
 public:
   CygwinCrashReporter();
   void process_environment(void);
   int process_command_line(int argc, wchar_t **argv);
+  void process_client_info(const google_breakpad::ClientInfo* client_info);
   void get_process_info(void);
   void do_dump(void);
   void set_notes(const wchar_t *notes);
@@ -40,6 +46,7 @@ public:
   // info state
   DWORD pid;
   std::wstring process_name;
+  const google_breakpad::ClientInfo* client_info;
 
   // result state -- XXX: should be private!
   bool overall_succeeded;

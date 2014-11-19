@@ -33,6 +33,24 @@ DEFINE_ENUM_FLAG_OPERATORS(MINIDUMP_TYPE);
 
 static google_breakpad::CrashGenerationClient *crash_generation_client = NULL;
 
+static void
+addCustomInfoEntry(google_breakpad::CustomInfoEntry** entries, size_t *count, const wchar_t *name, const char *value)
+{
+  if (!value)
+    return;
+
+  // convert value to wchar string
+  size_t l = mbstowcs(NULL, value, 0);
+  wchar_t wvalue[l+1];
+  mbstowcs(wvalue, value, l+1);
+
+  google_breakpad::CustomInfoEntry entry(name, wvalue);
+
+  *entries = (google_breakpad::CustomInfoEntry*)realloc(*entries, sizeof(const google_breakpad::CustomInfoEntry) * ((*count) + 1));
+  (*entries)[*count] = entry;
+  (*count)++;
+}
+
 //
 // CygwinCrashReporterInit()
 //
@@ -42,8 +60,16 @@ static google_breakpad::CrashGenerationClient *crash_generation_client = NULL;
 //
 
 extern "C"  __attribute__ ((dllexport))
-int CygwinCrashReporterInit(void)
+int CygwinCrashReporterInit(const char *url, const char *logfile)
 {
+  size_t count = 0;
+  google_breakpad::CustomInfoEntry* entries = NULL;
+
+  addCustomInfoEntry(&entries, &count, L"CYGWIN_CRASHREPORTER_URL", url);
+  addCustomInfoEntry(&entries, &count, L"CYGWIN_CRASHREPORTER_LOGFILE", logfile);
+
+  google_breakpad::CustomClientInfo info = { entries, count };
+
   // XXX: needs ability to customize
   MINIDUMP_TYPE dump_type =  MiniDumpNormal | MiniDumpWithHandleData | MiniDumpWithFullMemoryInfo
         | MiniDumpWithThreadInfo | MiniDumpWithFullAuxiliaryState
@@ -58,7 +84,7 @@ int CygwinCrashReporterInit(void)
   // running
   crash_generation_client = new google_breakpad::CrashGenerationClient(PIPENAME,
                                                                        dump_type,
-                                                                       NULL);
+                                                                       &info);
   if (crash_generation_client->Register())
     {
       return 1;

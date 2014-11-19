@@ -24,6 +24,7 @@
 
 #include <breakpad/client/windows/handler/exception_handler.h>
 #include <breakpad/client/windows/sender/crash_report_sender.h>
+#include "breakpad/client/windows/crash_generation/client_info.h"
 
 #include <sstream>
 #include <time.h>
@@ -173,6 +174,38 @@ CygwinCrashReporter::process_command_line(int argc, wchar_t **argv)
     }
 
   return 0;
+}
+
+void
+CygwinCrashReporter::process_client_info(const google_breakpad::ClientInfo* client_info)
+{
+  crashreporter->pid = client_info->pid();
+  crashreporter->client_info = client_info;
+
+  google_breakpad::CustomClientInfo cci = client_info->GetCustomInfo();
+  for (unsigned int i = 0; i < cci.count; i++)
+    {
+      if (verbose)
+        {
+          wprintf(L"%d: %ls %ls\n", i, cci.entries[i].name, cci.entries[i].value);
+          fflush(stdout);
+        }
+
+      if (wcscmp(cci.entries[i].name, L"CYGWIN_CRASHREPORTER_URL") == 0)
+        crashreporter->server_url = cci.entries[i].value;
+
+      if (wcscmp(cci.entries[i].name, L"CYGWIN_CRASHREPORTER_LOGFILE") == 0)
+        crashreporter->extra_files.push_back(cci.entries[i].value);
+
+      if (wcscmp(cci.entries[i].name, L"CYGWIN_CRASHREPORTER_NO_REPORT") == 0)
+        {
+          crashreporter->noreport = TRUE;
+          crashreporter->nodelete = TRUE;
+        }
+
+      if (wcscmp(cci.entries[i].name, L"CYGWIN_CRASHREPORTER_NO_DELETE_DUMP") == 0)
+        crashreporter->nodelete = TRUE;
+    }
 }
 
 void

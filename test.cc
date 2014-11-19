@@ -40,10 +40,33 @@ ShowDumpResults(const wchar_t* dump_path  __attribute__((unused)),
   return succeeded;
 }
 
+static void
+addCustomInfoEntry(google_breakpad::CustomInfoEntry** entries, size_t *count, const wchar_t *name)
+{
+  const wchar_t *value = _wgetenv(name);
+  if (!value)
+    return;
+
+  google_breakpad::CustomInfoEntry entry(name, value);
+
+  *entries = (google_breakpad::CustomInfoEntry*)realloc(*entries, sizeof(const google_breakpad::CustomInfoEntry) * ((*count) + 1));
+  (*entries)[*count] = entry;
+  (*count)++;
+}
+
 extern "C" int
 wmain(int argc __attribute__((unused)),
       wchar_t **argv __attribute__((unused)))
 {
+  size_t count = 0;
+  google_breakpad::CustomInfoEntry* entries = NULL;
+
+  addCustomInfoEntry(&entries, &count, L"CYGWIN_CRASHREPORTER_URL");
+  addCustomInfoEntry(&entries, &count, L"CYGWIN_CRASHREPORTER_NO_REPORT");
+  addCustomInfoEntry(&entries, &count, L"CYGWIN_CRASHREPORTER_NO_DELETE_DUMP");
+
+  google_breakpad::CustomClientInfo info = { entries, count };
+
   MINIDUMP_TYPE dump_type =  MiniDumpNormal | MiniDumpWithHandleData | MiniDumpWithFullMemoryInfo
         | MiniDumpWithThreadInfo | MiniDumpWithFullAuxiliaryState
         | MiniDumpIgnoreInaccessibleMemory | MiniDumpWithTokenInformation
@@ -57,7 +80,7 @@ wmain(int argc __attribute__((unused)),
                                         google_breakpad::ExceptionHandler::HANDLER_ALL,
                                         dump_type,
                                         PIPENAME,
-                                        NULL);
+                                        &info);
 
   // deref zero
   int* x = 0;
