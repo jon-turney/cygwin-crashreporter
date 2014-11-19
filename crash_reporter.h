@@ -38,10 +38,15 @@ public:
   void process_client_info(const google_breakpad::ClientInfo* client_info);
   void get_process_info(void);
   void do_dump(void);
+  typedef void (*DumpCallback)(CygwinCrashReporter *);
+  void set_dump_callback(DumpCallback dump_callback);
   void set_notes(const wchar_t *notes);
   void set_verbose(bool b);
   void kill_process(void);
   static std::wstring get_dumps_dir(void);
+  bool upload_callback(const wchar_t* dump_path,
+                       const wchar_t* minidump_id,
+                       bool succeeded);
 
   // info state
   DWORD pid;
@@ -68,18 +73,18 @@ private:
   std::wstring reporter_notes;
   std::vector<std::wstring> extra_files;
 
+  //
+  DumpCallback dump_callback;
+
   // implementation helpers
   void usage(FILE *stream, int status);
   void print_version(void);
-  bool crash_reporter_callback(const wchar_t* dump_path,
-                               const wchar_t* minidump_id,
-                               bool succeeded);
-
   friend bool callback_friend(CygwinCrashReporter *context,
                               const wchar_t* dump_path,
                               const wchar_t* minidump_id,
                               bool succeeded);
   static void create_dumps_dir(void);
+  void dump(void);
 };
 
 // the global instance we use

@@ -36,6 +36,7 @@
 #define SERVER_URL L"http://crashreportserver/addreport.php"
 #define CHECKPOINT_FILE L"crash_checkpoint.dat"
 
+void dump(CygwinCrashReporter *crashreporter);
 wchar_t CygwinCrashReporter::dumps_dir[MAX_PATH+1] = L"";
 
 // global singleton instance
@@ -260,9 +261,9 @@ CygwinCrashReporter::set_verbose(bool b)
 }
 
 bool
-CygwinCrashReporter::crash_reporter_callback(const wchar_t* dump_path,
-                                             const wchar_t* minidump_id,
-                                             bool succeeded)
+CygwinCrashReporter::upload_callback(const wchar_t* dump_path,
+                                     const wchar_t* minidump_id,
+                                     bool succeeded)
 {
   wchar_t minidump_path[MAX_PATH];
   swprintf(minidump_path, MAX_PATH, L"%s\\%s.dmp", dump_path, minidump_id);
@@ -389,7 +390,7 @@ bool
 callback_friend(CygwinCrashReporter *context, const wchar_t* dump_path,
                 const wchar_t* minidump_id, bool succeeded)
 {
-  return context->crash_reporter_callback(dump_path, minidump_id, succeeded);
+  return context->upload_callback(dump_path, minidump_id, succeeded);
 }
 
 static bool
@@ -401,7 +402,22 @@ callback(const wchar_t* dump_path, const wchar_t* minidump_id, void* context,
 }
 
 void
+CygwinCrashReporter::set_dump_callback(DumpCallback c)
+{
+  dump_callback = c;
+}
+
+void
 CygwinCrashReporter::do_dump(void)
+{
+  if (dump_callback)
+    dump_callback(this);
+  else
+    dump();
+}
+
+void
+CygwinCrashReporter::dump(void)
 {
   HANDLE process = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ,
                                 FALSE,

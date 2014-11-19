@@ -41,6 +41,28 @@
 
 #include <stdio.h>
 
+static google_breakpad::CrashGenerationServer* crash_server = NULL;
+
+void dump_callback(CygwinCrashReporter *crashreporter)
+{
+  // generate dump
+  std::wstring dump_path;
+  bool succeeded = crash_server->GenerateDump(*(crashreporter->client_info), &dump_path);
+
+  // massage dump_path into dump_dir and minidump_id to match uploader callback interface
+  std::wstring dump_dir = crashreporter->get_dumps_dir();
+  std::wstring minidump_id;
+  if (succeeded)
+    {
+      int len = dump_dir.length();
+      minidump_id = dump_path.substr(len + 1, std::wstring::npos);
+      minidump_id = minidump_id.substr(0, minidump_id.length() - 4);
+    }
+
+  // upload
+  crashreporter->upload_callback(dump_dir.c_str(), minidump_id.c_str(), succeeded);
+}
+
 static void clientConnected(void* context __attribute__((unused)),
                             const google_breakpad::ClientInfo* client_info)
 {
@@ -60,6 +82,7 @@ static void clientCrashed(void* context __attribute__((unused)),
   crashreporter->set_verbose(TRUE); // XXX: debug
   crashreporter->process_client_info(client_info);
   crashreporter->get_process_info();
+  crashreporter->set_dump_callback(dump_callback);
 
   main_display();
 
@@ -87,7 +110,6 @@ wWinMain(HINSTANCE hInstance,
 
   // Start crash generation server
   // This will fail if one is already listening on the named pipe
-  static google_breakpad::CrashGenerationServer* crash_server = NULL;
   crash_server = new google_breakpad::CrashGenerationServer(PIPENAME,
                                                             NULL,
                                                             clientConnected,
