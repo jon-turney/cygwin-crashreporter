@@ -35,18 +35,22 @@
 #define SERVER_URL L"http://crashreportserver/addreport.php"
 #define CHECKPOINT_FILE L"crash_checkpoint.dat"
 
+wchar_t CygwinCrashReporter::dumps_dir[MAX_PATH+1] = L"";
+
 // global singleton instance
 CygwinCrashReporter *crashreporter = NULL;
 
 CygwinCrashReporter::CygwinCrashReporter()
 {
   pid = 0;
-  dumps_dir[0] = 0;
   verbose = FALSE;
   nokill = FALSE;
   server_url = SERVER_URL;
   nodelete = FALSE;
   noreport = FALSE;
+
+  if (dumps_dir[0] == '\0')
+    create_dumps_dir();
 
   const wchar_t *env_server_url = _wgetenv(L"CYGWIN_CRASHREPORTER_URL");
   if (env_server_url)
@@ -167,8 +171,8 @@ CygwinCrashReporter::process_command_line(int argc, wchar_t **argv)
   return 0;
 }
 
-int
-CygwinCrashReporter::create_temp_dir(void)
+void
+CygwinCrashReporter::create_dumps_dir(void)
 {
   // in the very limited environment a Win32 process inherits from a Cygwin
   // process, GetTempPath() may not return anything useful, so try harder to
@@ -195,8 +199,15 @@ CygwinCrashReporter::create_temp_dir(void)
     // fall back to the working directory
     dumps_dir[0] = 0;
   }
+}
 
-  return 0;
+std::wstring
+CygwinCrashReporter::get_dumps_dir(void)
+{
+  if (dumps_dir[0] == '\0')
+    create_dumps_dir();
+
+  return dumps_dir;
 }
 
 void
@@ -349,9 +360,6 @@ callback(const wchar_t* dump_path, const wchar_t* minidump_id, void* context,
 void
 CygwinCrashReporter::do_dump(void)
 {
-  if (create_temp_dir())
-    return;
-
   HANDLE process = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ,
                                 FALSE,
                                 pid);

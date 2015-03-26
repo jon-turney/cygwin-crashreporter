@@ -33,6 +33,7 @@ public:
   void do_dump(void);
   void set_notes(const wchar_t *notes);
   void kill_process(void);
+  static std::wstring get_dumps_dir(void);
 
   // info state
   DWORD pid;
@@ -47,8 +48,9 @@ public:
   std::wstring upload_report_code;
 
 private:
+  static wchar_t dumps_dir[MAX_PATH+1];
+
   // input state
-  wchar_t dumps_dir[MAX_PATH+1];
   bool verbose;
   bool nokill;
   bool nodelete;
@@ -60,7 +62,6 @@ private:
   // implementation helpers
   void usage(FILE *stream, int status);
   void print_version(void);
-  int create_temp_dir(void);
   bool crash_reporter_callback(const wchar_t* dump_path,
                                const wchar_t* minidump_id,
                                bool succeeded);
@@ -69,6 +70,7 @@ private:
                               const wchar_t* dump_path,
                               const wchar_t* minidump_id,
                               bool succeeded);
+  static void create_dumps_dir(void);
 };
 
 // the global instance we use
