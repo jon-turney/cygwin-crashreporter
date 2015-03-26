@@ -10,3 +10,5 @@ depcomp
 install-sh
 missing
 version
+*.1
+*.man
