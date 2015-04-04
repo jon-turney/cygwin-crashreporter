@@ -34,7 +34,7 @@
 
 #include "breakpad/client/windows/crash_generation/crash_generation_server.h"
 #include "breakpad/client/windows/crash_generation/client_info.h"
-#include "server.h"
+#include "pipename.h"
 #include "crash_reporter.h"
 #include "window.h"
 #include "wizard.h"
@@ -108,9 +108,14 @@ wWinMain(HINSTANCE hInstance,
   // Get dump directory
   std::wstring dump_dir = crashreporter->get_dumps_dir();
 
+  // Construct pipename containing sessionid
+  const wchar_t *pipename = get_pipename();
+  wprintf(L"Listening on pipe '%ls'\n", pipename);
+  fflush(stdout);
+
   // Start crash generation server
   // This will fail if one is already listening on the named pipe
-  crash_server = new google_breakpad::CrashGenerationServer(PIPENAME,
+  crash_server = new google_breakpad::CrashGenerationServer(pipename,
                                                             NULL,
                                                             clientConnected,
                                                             NULL,

@@ -21,7 +21,7 @@
 */
 
 #include "breakpad/client/windows/handler/exception_handler.h"
-#include "server.h"
+#include "pipename.h"
 
 DEFINE_ENUM_FLAG_OPERATORS(MINIDUMP_TYPE);
 
@@ -79,7 +79,7 @@ wmain(int argc __attribute__((unused)),
                                         NULL,
                                         google_breakpad::ExceptionHandler::HANDLER_ALL,
                                         dump_type,
-                                        PIPENAME,
+                                        get_pipename(),
                                         &info);
 
   // deref zero

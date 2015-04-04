@@ -27,7 +27,7 @@
 //
 
 #include "breakpad/client/windows/crash_generation/crash_generation_client.h"
-#include "server.h"
+#include "pipename.h"
 
 DEFINE_ENUM_FLAG_OPERATORS(MINIDUMP_TYPE);
 
@@ -82,7 +82,7 @@ int CygwinCrashReporterInit(const char *url, const char *logfile)
 
   // locate an out-of-process crash dump generation server, if one is already
   // running
-  crash_generation_client = new google_breakpad::CrashGenerationClient(PIPENAME,
+  crash_generation_client = new google_breakpad::CrashGenerationClient(get_pipename(),
                                                                        dump_type,
                                                                        &info);
   if (crash_generation_client->Register())

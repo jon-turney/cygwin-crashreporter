@@ -1,5 +1,5 @@
 bin_PROGRAMS = cygwin-crashreporter-cli cygwin-crashreporter-gui cygwin-crashreporter-server
-noinst_LIBRARIES = libcrash_reporter.a libwizard.a
+noinst_LIBRARIES = libcrash_reporter.a libwizard.a libpipename.a
 noinst_PROGRAMS = test
 
 AM_LDFLAGS = -static-libgcc -static-libstdc++ -municode
@@ -12,17 +12,20 @@ libwizard_a_SOURCES = window.cc window.h proppage.cc \
 		      progress.h done.cc done.h wizard.cc wizard.h \
 		      res.rc resource.h manifest.xml hippo.ico cygwin.ico
 
+libpipename_a_SOURCES = pipename.cc pipename.h
+
 cygwin_crashreporter_cli_SOURCES = main.cc
 cygwin_crashreporter_gui_SOURCES = winmain.cc
-cygwin_crashreporter_server_SOURCES = server.cc server.h
+cygwin_crashreporter_server_SOURCES = server.cc
 
 test_SOURCES = test.cc
 
 cygwin_crashreporter_cli_LDADD = libcrash_reporter.a -lpsapi
 cygwin_crashreporter_gui_LDADD = res.o libcrash_reporter.a libwizard.a -lgdi32 -lcomctl32 -lpsapi
 cygwin_crashreporter_gui_LDFLAGS = $(AM_LDFLAGS) -mwindows
-cygwin_crashreporter_server_LDADD = res.o libcrash_reporter.a libwizard.a -lgdi32 -lcomctl32 -lpsapi
+cygwin_crashreporter_server_LDADD = res.o libcrash_reporter.a libwizard.a libpipename.a -lgdi32 -lcomctl32 -lpsapi
 cygwin_crashreporter_server_LDFLAGS = $(AM_LDFLAGS) -mwindows
+test_LDADD = libpipename.a
 
 # cygwin-crashreporter-hooks.dll needs to be statically linked to all non-system
 # libraries, which is difficult to request with libtool (since it adds
@@ -38,7 +41,7 @@ cygwin_crashreporter_hooks_LINK = \
 	-Wl,--out-implib=$@.a \
 	-shared $(AM_LDFLAGS) $(LDFLAGS) -o $@
 
-cygwin_crashreporter_hooks_OBJECTS = hooks.o
+cygwin_crashreporter_hooks_OBJECTS = hooks.o pipename.o
 
 cygwin-crashreporter-hooks.dll: $(cygwin_crashreporter_hooks_OBJECTS)
 	$(AM_V_CXXLD)$(cygwin_crashreporter_hooks_LINK) $(cygwin_crashreporter_hooks_OBJECTS) $(LIBS)

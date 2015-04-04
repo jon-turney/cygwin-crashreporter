@@ -1,7 +1,7 @@
 /*
-  server.h
+  pipename.cc
 
-  Copyright 2014 Jon TURNEY
+  Copyright 2015 Jon TURNEY
 
   This file is part of cygwin-crashreporter
 
@@ -20,4 +20,23 @@
 
 */
 
-#define PIPENAME L"\\\\.\\pipe\\Cygwin\\CrashReportServer"
+#include <windows.h>
+#include <stdio.h>
+
+#include "pipename.h"
+
+//
+// Construct a pipename containing sessionid
+//
+
+const wchar_t *
+get_pipename(void)
+{
+  const size_t buflen = PIPENAME_FORMAT_LENGTH + 10;
+  static wchar_t pipename[buflen];
+  DWORD processId = GetCurrentProcessId();
+  DWORD sessionId = -1;
+  ProcessIdToSessionId(processId, &sessionId);
+  swprintf(pipename, buflen, PIPENAME_FORMAT, sessionId);
+  return pipename;
+}
