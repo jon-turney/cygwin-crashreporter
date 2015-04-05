@@ -20,4 +20,4 @@
 
 */
 
-void main_display(void);
+int main_display(void);

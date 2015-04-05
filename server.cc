@@ -84,7 +84,8 @@ static void clientCrashed(void* context __attribute__((unused)),
   crashreporter->get_process_info();
   crashreporter->set_dump_callback(dump_callback);
 
-  main_display();
+  if (!main_display())
+    wprintf(L"No access to interactive desktop\n");
 
   delete crashreporter;
 }

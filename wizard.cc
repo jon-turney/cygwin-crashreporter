@@ -27,9 +27,18 @@
 
 #include "propsheet.h"
 
-void
+int
 main_display(void)
 {
+  // It doesn't make much sense to put up our GUI if we can't receive user
+  // input, which can happen if the crashed program was run from a service.
+  HDESK hDesk = OpenInputDesktop(DF_ALLOWOTHERACCOUNTHOOK, FALSE, GENERIC_WRITE);
+  if (!hDesk)
+    {
+      return 0;
+    }
+  CloseDesktop(hDesk);
+
   SplashPage Splash;
   NotesPage Notes;
   ProgressPage Progress;
@@ -51,4 +60,6 @@ main_display(void)
 
   // Create and run the PropSheet main window
   MainWindow.Create();
+
+  return 1;
 }

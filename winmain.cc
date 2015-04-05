@@ -50,16 +50,7 @@ wWinMain(HINSTANCE hInstance,
   crashreporter->process_command_line(argc, argv);
   crashreporter->get_process_info();
 
-  // It doesn't make much sense to put up our GUI if we can't receive user
-  // input, which can happen if the crashed program was run from a service.
-  HDESK hDesk = OpenInputDesktop(DF_ALLOWOTHERACCOUNTHOOK, FALSE, GENERIC_WRITE);
-  if (hDesk)
-    {
-      main_display();
-
-      CloseDesktop(hDesk);
-    }
-  else
+  if (!main_display())
     {
       wprintf(L"No access to interactive desktop\n");
     }
