@@ -1,0 +1,37 @@
+version: '{build}'
+os: Unstable
+environment:
+  CYGWIN_ROOT: C:\cygwin
+  CYGWIN_MIRROR: http://cygwin.mirror.constant.com
+  CACHE: C:\cache
+  matrix:
+  - HOST: x86_64-w64-mingw32
+  - HOST: i686-w64-mingw32
+install:
+- if "%HOST%"=="i686-w64-mingw32" set PKGARCH="mingw64-i686"
+- if "%HOST%"=="x86_64-w64-mingw32" set PKGARCH="mingw64-x86_64"
+- echo PKGARCH is %PKGARCH%
+- if NOT DEFINED PKGARCH exit 1
+- if not exist %CACHE% mkdir %CACHE%
+- set SETUP=setup-x86.exe
+- appveyor DownloadFile http://www.dronecode.org.uk/cygwin/%SETUP% -FileName %CYGWIN_ROOT%\%SETUP%
+- echo Updating Cygwin
+- '%CYGWIN_ROOT%\%SETUP% -qnNdO -R "%CYGWIN_ROOT%" -s "%CYGWIN_MIRROR%" -l "%CACHE%"'
+- echo Installing build dependencies
+- '%CYGWIN_ROOT%\%SETUP% -qnNdO -R "%CYGWIN_ROOT%" -s "%CYGWIN_MIRROR%" -l "%CACHE%" -P "autoconf,automake,libtool,make,%PKGARCH%-google-breakpad-devel,%PKGARCH%-headers,%PKGARCH%-gcc-g++,pkg-config"'
+- echo Install done
+cache: C:\cache
+build_script:
+- SET PATH=%CYGWIN_ROOT%/bin
+- echo autogen running...
+- bash -lc "cd $APPVEYOR_BUILD_FOLDER; exec 0</dev/null; ./update-version"
+- bash -lc "cd $APPVEYOR_BUILD_FOLDER; exec 0</dev/null; ./autogen.sh --host=%HOST%"
+- echo make running...
+- bash -lc "cd $APPVEYOR_BUILD_FOLDER; exec 0</dev/null; make"
+- echo make install running...
+- bash -lc "cd $APPVEYOR_BUILD_FOLDER; exec 0</dev/null; make install DESTDIR=./staging"
+- bash -lc "cd $APPVEYOR_BUILD_FOLDER; exec 0</dev/null; make"
+- echo make distcheck running...
+- bash -lc "cd $APPVEYOR_BUILD_FOLDER; exec 0</dev/null; make distcheck"
+artifacts:
+- path: staging
