@@ -63,6 +63,6 @@ cygwin-crashreporter-cli.1 cygwin-crashreporter-gui.1:
 CLEANFILES += $(BUILT_SOURCES)
 
 # must be built as a native Windows application when distchecked
-AM_DISTCHECK_CONFIGURE_FLAGS = "--host=i686-w64-mingw32"
+AM_DISTCHECK_CONFIGURE_FLAGS = "--host=@host@"
 
 EXTRA_DIST += update-version version
