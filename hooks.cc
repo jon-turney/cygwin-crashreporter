@@ -70,11 +70,9 @@ int CygwinCrashReporterInit(const char *url, const char *logfile)
 
   google_breakpad::CustomClientInfo info = { entries, count };
 
-  // XXX: needs ability to customize
-  MINIDUMP_TYPE dump_type =  MiniDumpNormal | MiniDumpWithHandleData | MiniDumpWithFullMemoryInfo
-        | MiniDumpWithThreadInfo | MiniDumpWithFullAuxiliaryState
-        | MiniDumpIgnoreInaccessibleMemory | MiniDumpWithTokenInformation
-        | MiniDumpWithIndirectlyReferencedMemory;
+  // XXX: needs ability to customize, without using flags which are invalid
+  MINIDUMP_TYPE dump_type =  MiniDumpNormal | MiniDumpWithHandleData |
+    MiniDumpWithIndirectlyReferencedMemory | MiniDumpWithProcessThreadData;
 
   // if we've already been called, disconnect
   if (crash_generation_client)
