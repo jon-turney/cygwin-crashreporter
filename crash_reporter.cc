@@ -50,6 +50,7 @@ CygwinCrashReporter::CygwinCrashReporter()
   server_url = SERVER_URL;
   nodelete = FALSE;
   noreport = FALSE;
+  dump_callback = NULL;
 
   if (dumps_dir[0] == '\0')
     create_dumps_dir();
